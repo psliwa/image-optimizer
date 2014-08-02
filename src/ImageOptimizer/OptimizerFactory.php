@@ -5,6 +5,8 @@ namespace ImageOptimizer;
 
 
 use ImageOptimizer\Exception\Exception;
+use ImageOptimizer\TypeGuesser\TypeGuesser;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Process\ExecutableFinder;
 
 class OptimizerFactory
@@ -18,19 +20,86 @@ class OptimizerFactory
     public function __construct(array $options = array())
     {
         $this->executableFinder = new ExecutableFinder();
+        $this->setOptions($options);
+        $this->setUpOptimizers();
+    }
+    
+    private function setOptions(array $options)
+    {
+        $this->options = $this->getOptionsResolver()->resolve($options);
+    }
+    
+    protected function getOptionsResolver()
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults(array(
+            'ignore_errors' => true,
+        ));
+        $resolver->setOptional(array(
+            'optipng_bin',
+            'pngquant_bin',
+            'pngcrush_bin',
+            'pngout_bin',
+            'gifsicle_bin',
+            'jpegoptim_bin',
+            'jpegtran_bin',
+        ));
 
-        $this->options = $options;
-        $this->optimizers['optipng'] = new CommandOptimizer(
-            new Command($this->executable('optipng'), array('-i0','-o2', '-quiet'))
-        );
-        $this->optimizers['pngquant'] = new CommandOptimizer(
-            new Command($this->executable('pngquant'), array('--speed=1','--ext=.png', '--force'))
-        );
+        return $resolver;
+    }
 
+    protected function setUpOptimizers()
+    {
+        $this->optimizers['optipng'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('optipng'), array('-i0', '-o2', '-quiet'))
+        ));
+        $this->optimizers['pngquant'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('pngquant'), array('--speed=1', '--ext=.png', '--force'))
+        ));
+        $this->optimizers['pngcrush'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('pngcrush'), array('-reduce', '-q', '-ow'))
+        ));
+        $this->optimizers['pngout'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('pngout'), array('-s3', '-q', '-y'))
+        ));
         $this->optimizers['png'] = new ChainOptimizer(array(
             $this->optimizers['pngquant'],
             $this->optimizers['optipng'],
         ));
+
+        $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('gifsicle'), array('-b', '-O5'))
+        ));
+
+        $this->optimizers['jpegoptim'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('jpegoptim'), array('--strip-all', '--all-progressiv'))
+        ));
+        $this->optimizers['jpegtran'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('jpegtran'), array('-optimize', '-progressive')),
+            function ($filepath) {
+                return array('-outfile', $filepath);
+            }
+        ));
+        $this->optimizers['jpeg'] = $this->optimizers['jpg'] = new ChainOptimizer(array(
+            $this->unwrap($this->optimizers['jpegtran']),
+            $this->unwrap($this->optimizers['jpegoptim']),
+        ), true);
+
+        $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer(array(
+            TypeGuesser::TYPE_GIF => $this->optimizers['gif'],
+            TypeGuesser::TYPE_PNG => $this->optimizers['png'],
+            TypeGuesser::TYPE_JPEG => $this->optimizers['jpeg'],
+        )));
+    }
+
+    private function wrap(Optimizer $optimizer)
+    {
+        return $this->option('ignore_errors', true) ? new SuppressErrorOptimizer($optimizer) : $optimizer;
+    }
+
+    private function unwrap(Optimizer $optimizer)
+    {
+        return $optimizer instanceof SuppressErrorOptimizer ? $optimizer->unwrap() : $optimizer;
     }
 
     private function executable($name)
@@ -51,7 +120,7 @@ class OptimizerFactory
      * @return Optimizer
      * @throws Exception
      */
-    public function getOptimizer($name = self::OPTIMIZER_SMART)
+    public function get($name = self::OPTIMIZER_SMART)
     {
         if(!isset($this->optimizers[$name])) {
             throw new Exception(sprintf('Optimizer "%s" not found', $name));

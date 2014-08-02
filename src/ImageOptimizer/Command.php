@@ -26,7 +26,8 @@ final class Command
 
         $args = array_merge($this->args, $customArgs);
 
-        $command = escapeshellcmd($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args));
+        $suppressOutput = (defined('PHP_WINDOWS_VERSION_BUILD') ? '' : ' 1> /dev/null 2> /dev/null');
+        $command = escapeshellcmd($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args)).$suppressOutput;
         exec($command, $output, $result);
 
         if($result == 127) {

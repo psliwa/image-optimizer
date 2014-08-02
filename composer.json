@@ -1,7 +1,7 @@
 {
     "name": "ps/image-optimizer",
-    "description": "Image optimization library. This library is able to optimize png, jpg and gif files in very easy and handy way. It uses optipng, pngquant, pngcrush, pngout, gifsicle, jpegoptim and jpegtran tools.",
-    "keywords": ["image optimizer", "image", "optimization", "jpegoptim", "optipng"],
+    "description": "Image optimization / compression library. This library is able to optimize png, jpg and gif files in very easy and handy way. It uses optipng, pngquant, pngcrush, pngout, gifsicle, jpegoptim and jpegtran tools.",
+    "keywords": ["image optimizer", "compression", "image", "optimization", "jpegoptim", "optipng"],
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
@@ -16,6 +16,7 @@
         }
     },
     "require": {
-        "symfony/process": "~2.0"
+        "symfony/process": "~2.0",
+        "symfony/options-resolver": "~2.1"
     }
 }
