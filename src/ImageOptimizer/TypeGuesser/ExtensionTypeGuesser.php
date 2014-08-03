@@ -13,7 +13,7 @@ class ExtensionTypeGuesser implements TypeGuesser
      */
     public function guess($filepath)
     {
-        $ext = pathinfo($filepath, PATHINFO_EXTENSION);
+        $ext = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
 
         switch($ext) {
             case 'png':

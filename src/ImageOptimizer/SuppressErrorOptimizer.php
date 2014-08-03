@@ -5,14 +5,17 @@ namespace ImageOptimizer;
 
 
 use ImageOptimizer\Exception\Exception;
+use Psr\Log\LoggerInterface;
 
 class SuppressErrorOptimizer implements Optimizer
 {
     private $optimizer;
+    private $logger;
 
-    public function __construct(Optimizer $optimizer)
+    public function __construct(Optimizer $optimizer, LoggerInterface $logger)
     {
         $this->optimizer = $optimizer;
+        $this->logger = $logger;
     }
 
     public function optimize($filepath)
@@ -20,7 +23,7 @@ class SuppressErrorOptimizer implements Optimizer
         try {
             $this->optimizer->optimize($filepath);
         } catch (Exception $e) {
-            //suppress
+            $this->logger->info($e);
         }
     }
 

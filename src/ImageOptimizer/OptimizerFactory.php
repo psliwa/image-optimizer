@@ -6,6 +6,8 @@ namespace ImageOptimizer;
 
 use ImageOptimizer\Exception\Exception;
 use ImageOptimizer\TypeGuesser\TypeGuesser;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Process\ExecutableFinder;
 
@@ -16,10 +18,13 @@ class OptimizerFactory
     private $optimizers = array();
     private $options;
     private $executableFinder;
+    private $logger;
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = array(), LoggerInterface $logger = null)
     {
         $this->executableFinder = new ExecutableFinder();
+        $this->logger = $logger ?: new NullLogger();
+
         $this->setOptions($options);
         $this->setUpOptimizers();
     }
@@ -94,7 +99,7 @@ class OptimizerFactory
 
     private function wrap(Optimizer $optimizer)
     {
-        return $this->option('ignore_errors', true) ? new SuppressErrorOptimizer($optimizer) : $optimizer;
+        return $this->option('ignore_errors', true) ? new SuppressErrorOptimizer($optimizer, $this->logger) : $optimizer;
     }
 
     private function unwrap(Optimizer $optimizer)
@@ -118,7 +123,7 @@ class OptimizerFactory
     /**
      * @param string $name
      * @return Optimizer
-     * @throws Exception
+     * @throws Exception When requested optimizer does not exist
      */
     public function get($name = self::OPTIMIZER_SMART)
     {
