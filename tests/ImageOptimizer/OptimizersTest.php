@@ -44,6 +44,7 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
     public function optimizerProvider()
     {
         $pngFile = __DIR__.'/Resources/sample.png';
+        $pngWithoutExtension = __DIR__.'/Resources/samplepng';
         $gifFile = __DIR__.'/Resources/sample.gif';
         $jpgFile = __DIR__.'/Resources/sample.jpg';
 
@@ -53,6 +54,9 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 'pngquant', $pngFile,
+            ),
+            array(
+                'pngquant', $pngWithoutExtension,
             ),
             array(
                 'png', $pngFile,
@@ -112,7 +116,7 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        foreach(array('sample.gif', 'sample.jpg', 'sample.png') as $file) {
+        foreach(array('sample.gif', 'sample.jpg', 'sample.png', 'samplepng') as $file) {
             @unlink(__DIR__.'/Resources/'.self::TMP_DIR.'/'.$file);
         }
     }

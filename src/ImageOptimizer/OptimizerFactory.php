@@ -59,7 +59,11 @@ class OptimizerFactory
             new Command($this->executable('optipng'), array('-i0', '-o2', '-quiet'))
         ));
         $this->optimizers['pngquant'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('pngquant'), array('--speed=1', '--ext=.png', '--force'))
+            new Command($this->executable('pngquant'), array('--force')),
+            function($filepath){
+                $ext = pathinfo($filepath, PATHINFO_EXTENSION);
+                return array('--ext='.($ext ? '.'.$ext : ''), '--');
+            }
         ));
         $this->optimizers['pngcrush'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('pngcrush'), array('-reduce', '-q', '-ow'))

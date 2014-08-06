@@ -3,6 +3,8 @@
 
 namespace ImageOptimizer;
 
+use ImageOptimizer\TypeGuesser\SmartTypeGuesser;
+
 class ImageSimilarityJudge
 {
     /**
@@ -38,13 +40,13 @@ class ImageSimilarityJudge
 
     private static function createResource($image)
     {
-        $ext = pathinfo($image, PATHINFO_EXTENSION);
-        $ext = $ext === 'jpg' ? 'jpeg' : $ext;
+        $typeGuesser = new SmartTypeGuesser();
+        $type = $typeGuesser->guess($image);
 
-        $function = 'imagecreatefrom'.$ext;
+        $function = 'imagecreatefrom'.$type;
 
         if(!function_exists($function)) {
-            throw new \InvalidArgumentException(sprintf('Image "%s" is not supported', $ext));
+            throw new \InvalidArgumentException(sprintf('Image "%s" is not supported', $type));
         }
 
         return $function($image);
