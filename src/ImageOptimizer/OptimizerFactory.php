@@ -40,7 +40,10 @@ class OptimizerFactory
         $resolver->setDefaults(array(
             'ignore_errors' => true,
         ));
-        $resolver->setOptional(array(
+
+        $method = is_callable(array($resolver, 'setDefined')) ? 'setDefined' : 'setOptional';
+
+        $resolver->$method(array(
             'optipng_bin',
             'pngquant_bin',
             'pngcrush_bin',
