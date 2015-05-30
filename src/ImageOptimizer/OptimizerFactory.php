@@ -84,7 +84,7 @@ class OptimizerFactory
         ));
 
         $this->optimizers['jpegoptim'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('jpegoptim'), array('--strip-all', '--all-progressiv'))
+            new Command($this->executable('jpegoptim'), array('--strip-all', '--all-progressive'))
         ));
         $this->optimizers['jpegtran'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('jpegtran'), array('-optimize', '-progressive')),
