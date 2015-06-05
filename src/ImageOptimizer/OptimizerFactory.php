@@ -1,8 +1,6 @@
 <?php
 
-
 namespace ImageOptimizer;
-
 
 use ImageOptimizer\Exception\Exception;
 use ImageOptimizer\TypeGuesser\TypeGuesser;
@@ -28,12 +26,12 @@ class OptimizerFactory
         $this->setOptions($options);
         $this->setUpOptimizers();
     }
-    
+
     private function setOptions(array $options)
     {
         $this->options = $this->getOptionsResolver()->resolve($options);
     }
-    
+
     protected function getOptionsResolver()
     {
         $resolver = new OptionsResolver();
@@ -48,6 +46,7 @@ class OptimizerFactory
             'pngquant_bin',
             'pngcrush_bin',
             'pngout_bin',
+            'advpng_bin',
             'gifsicle_bin',
             'jpegoptim_bin',
             'jpegtran_bin',
@@ -63,9 +62,9 @@ class OptimizerFactory
         ));
         $this->optimizers['pngquant'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('pngquant'), array('--force')),
-            function($filepath){
+            function ($filepath) {
                 $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-                return array('--ext='.($ext ? '.'.$ext : ''), '--');
+                return array('--ext=' . ($ext ? '.' . $ext : ''), '--');
             }
         ));
         $this->optimizers['pngcrush'] = $this->wrap(new CommandOptimizer(
@@ -73,6 +72,9 @@ class OptimizerFactory
         ));
         $this->optimizers['pngout'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('pngout'), array('-s3', '-q', '-y'))
+        ));
+        $this->optimizers['advpng'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('advpng'), array('-z', '-f', '-3', '-i20', '--'))
         ));
         $this->optimizers['png'] = new ChainOptimizer(array(
             $this->optimizers['pngquant'],
@@ -117,7 +119,7 @@ class OptimizerFactory
     private function executable($name)
     {
         $executableFinder = $this->executableFinder;
-        return $this->option($name.'_bin', function() use($name, $executableFinder){
+        return $this->option($name . '_bin', function () use ($name, $executableFinder) {
             return $executableFinder->find($name, $name);
         });
     }
@@ -134,7 +136,7 @@ class OptimizerFactory
      */
     public function get($name = self::OPTIMIZER_SMART)
     {
-        if(!isset($this->optimizers[$name])) {
+        if (!isset($this->optimizers[$name])) {
             throw new Exception(sprintf('Optimizer "%s" not found', $name));
         }
 
@@ -145,4 +147,4 @@ class OptimizerFactory
     {
         return is_callable($default) ? call_user_func($default) : $default;
     }
-} 
+}
