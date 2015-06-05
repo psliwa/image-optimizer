@@ -45,6 +45,7 @@ Supported options:
 * `pngquant_bin`
 * `pngcrush_bin`
 * `pngout_bin`
+* `advpng_bin`
 * `gifsicle_bin`
 * `jpegoptim_bin`
 * `jpegtran_bin`
@@ -68,9 +69,10 @@ optionally `Psr\LoggerInterface`.
 * `optipng` - [homepage][2]
 * `pngcrush` - [homepage][3]
 * `pngout` - [homepage][4]
-* `jpegtran` - [homepage][5]
-* `jpegoptim` - [homepage][6]
-* `gifsicle` - [homepage][7]
+* `advpng` - [homepage][5]
+* `jpegtran` - [homepage][6]
+* `jpegoptim` - [homepage][7]
+* `gifsicle` - [homepage][8]
 
 You can obtain concrete optimizer by passing his name to `ImageOptimizer\OptimizerFactory`::`get` method:
 
@@ -95,6 +97,7 @@ You can obtain concrete optimizer by passing his name to `ImageOptimizer\Optimiz
 [2]: http://optipng.sourceforge.net/
 [3]: http://pmt.sourceforge.net/pngcrush/
 [4]: http://www.jonof.id.au/kenutils
-[5]: http://jpegclub.org/jpegtran/
-[6]: http://freecode.com/projects/jpegoptim
-[7]: http://www.lcdf.org/gifsicle/
+[5]: http://advancemame.sourceforge.net/doc-advpng.html
+[6]: http://jpegclub.org/jpegtran/
+[7]: http://freecode.com/projects/jpegoptim
+[8]: http://www.lcdf.org/gifsicle/
