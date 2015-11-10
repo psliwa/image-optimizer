@@ -28,17 +28,24 @@ class OptimizerFactory
         $this->setOptions($options);
         $this->setUpOptimizers();
     }
-    
+
     private function setOptions(array $options)
     {
         $this->options = $this->getOptionsResolver()->resolve($options);
     }
-    
+
     protected function getOptionsResolver()
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults(array(
             'ignore_errors' => true,
+            'optipng_options' => array('-i0', '-o2', '-quiet'),
+            'pngquant_options' => array('--force'),
+            'pngcrush_options' => array('-reduce', '-q', '-ow'),
+            'pngout_options' => array('-s3', '-q', '-y'),
+            'gifsicle_options' => array('-b', '-O5'),
+            'jpegoptim_options' => array('--strip-all', '--all-progressive'),
+            'jpegtran_options' => array('-optimize', '-progressive'),
         ));
 
         $method = is_callable(array($resolver, 'setDefined')) ? 'setDefined' : 'setOptional';
@@ -59,20 +66,20 @@ class OptimizerFactory
     protected function setUpOptimizers()
     {
         $this->optimizers['optipng'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('optipng'), array('-i0', '-o2', '-quiet'))
+            new Command($this->executable('optipng'), $this->options['optipng_options'])
         ));
         $this->optimizers['pngquant'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('pngquant'), array('--force')),
+            new Command($this->executable('pngquant'), $this->options['pngquant_options']),
             function($filepath){
                 $ext = pathinfo($filepath, PATHINFO_EXTENSION);
                 return array('--ext='.($ext ? '.'.$ext : ''), '--');
             }
         ));
         $this->optimizers['pngcrush'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('pngcrush'), array('-reduce', '-q', '-ow'))
+            new Command($this->executable('pngcrush'), $this->options['pngcrush_options'])
         ));
         $this->optimizers['pngout'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('pngout'), array('-s3', '-q', '-y'))
+            new Command($this->executable('pngout'), $this->options['pngout_options'])
         ));
         $this->optimizers['png'] = new ChainOptimizer(array(
             $this->optimizers['pngquant'],
@@ -80,14 +87,14 @@ class OptimizerFactory
         ));
 
         $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('gifsicle'), array('-b', '-O5'))
+            new Command($this->executable('gifsicle'), $this->options['gifsicle_options'])
         ));
 
         $this->optimizers['jpegoptim'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('jpegoptim'), array('--strip-all', '--all-progressive'))
+            new Command($this->executable('jpegoptim'), $this->options['jpegoptim_options'])
         ));
         $this->optimizers['jpegtran'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('jpegtran'), array('-optimize', '-progressive')),
+            new Command($this->executable('jpegtran'), $this->options['jpegtran_options']),
             function ($filepath) {
                 return array('-outfile', $filepath);
             }
@@ -145,4 +152,4 @@ class OptimizerFactory
     {
         return is_callable($default) ? call_user_func($default) : $default;
     }
-} 
+}
