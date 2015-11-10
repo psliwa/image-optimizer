@@ -95,7 +95,7 @@ class OptimizerFactory
         $this->optimizers['jpeg'] = $this->optimizers['jpg'] = new ChainOptimizer(array(
             $this->unwrap($this->optimizers['jpegtran']),
             $this->unwrap($this->optimizers['jpegoptim']),
-        ), true);
+        ));
 
         $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer(array(
             TypeGuesser::TYPE_GIF => $this->optimizers['gif'],
