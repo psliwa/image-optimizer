@@ -12,9 +12,9 @@ Thanks to ImageOptimizer and librares that it uses, your image files can be **10
 
     $factory = new \ImageOptimizer\OptimizerFactory();
     $optimizer = $factory->get();
-    
+
     $filepath = /* path to image */;
-    
+
     $optimizer->optimize($filepath);
     //optimized file overwrites original one
 
@@ -34,6 +34,13 @@ automatically.
 Supported options:
 
 * `ignore_errors` (default: true)
+* `optipng_options` (default: `array('-i0', '-o2', '-quiet')`) - an array of arguments to pass to the library
+* `pngquant_options` (default: `array('--force')`)
+* `pngcrush_options` (default: `array('-reduce', '-q', '-ow')`)
+* `pngout_options` (default: `array('-s3', '-q', '-y')`)
+* `gifsicle_options` (default: `array('-b', '-O5')`)
+* `jpegoptim_options` (default: `array('--strip-all', '--all-progressive')`)
+* `jpegtran_options` (default: `array('-optimize', '-progressive')`)
 * `optipng_bin` (default: will be guessed) - you can enforce paths to binaries, but by default it will be guessed
 * `pngquant_bin`
 * `pngcrush_bin`
@@ -55,7 +62,7 @@ optionally `Psr\LoggerInterface`.
 
 * default (`smart`) - it guess file type and choose optimizer for this file type
 * `png` - chain of optimizers for png files, by default it uses `pngquant` and `optipng`. `pngquant` is lossy optimization
-* `jpg` - first of two optimizations will be executed: `jpegtran` or `jpegoptim` 
+* `jpg` - first of two optimizations will be executed: `jpegtran` or `jpegoptim`
 * `gif` - alias to `gifsicle`
 * `pngquant` - [homepage][1]
 * `optipng` - [homepage][2]
@@ -71,10 +78,10 @@ You can obtain concrete optimizer by passing his name to `ImageOptimizer\Optimiz
 
     //default optimizer is `smart`
     $optimizer = $factory->get();
-    
+
     //png optimizer
     $pngOptimizer = $factory->get('png');
-    
+
     //jpegoptim optimizer etc.
     $jpgOptimizer = $factory->get('jpegoptim');
 
