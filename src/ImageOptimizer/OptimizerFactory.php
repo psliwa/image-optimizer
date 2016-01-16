@@ -46,6 +46,7 @@ class OptimizerFactory
             'gifsicle_options' => array('-b', '-O5'),
             'jpegoptim_options' => array('--strip-all', '--all-progressive'),
             'jpegtran_options' => array('-optimize', '-progressive'),
+            'advpng_options' => array('-z', '-4', '-q')
         ));
 
         $method = is_callable(array($resolver, 'setDefined')) ? 'setDefined' : 'setOptional';
@@ -58,6 +59,7 @@ class OptimizerFactory
             'gifsicle_bin',
             'jpegoptim_bin',
             'jpegtran_bin',
+            'advpng_bin'
         ));
 
         return $resolver;
@@ -81,9 +83,14 @@ class OptimizerFactory
         $this->optimizers['pngout'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('pngout'), $this->options['pngout_options'])
         ));
+        $this->optimizers['advpng'] = $this->wrap(new CommandOptimizer(
+            new Command($this->executable('advpng'), $this->options['advpng_options'])
+        ));
         $this->optimizers['png'] = new ChainOptimizer(array(
             $this->optimizers['pngquant'],
             $this->optimizers['optipng'],
+            $this->optimizers['pngcrush'],
+            $this->optimizers['advpng']
         ));
 
         $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(new CommandOptimizer(
