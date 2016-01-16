@@ -26,12 +26,18 @@ final class Command
 
         $args = array_merge($this->args, $customArgs);
 
-        $suppressOutput = (defined('PHP_WINDOWS_VERSION_BUILD') ? '' : ' 1> /dev/null 2> /dev/null');
-        if(empty($suppressOutput)) {
-            $command = escapeshellarg($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args)).$suppressOutput;
+        $isWindowsPlatform = defined('PHP_WINDOWS_VERSION_BUILD');
+
+        if($isWindowsPlatform) {
+            $suppressOutput = '';
+            $escapeShellCmd = 'escapeshellarg';
         } else {
-            $command = escapeshellcmd($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args)).$suppressOutput;
+            $suppressOutput = ' 1> /dev/null 2> /dev/null';
+            $escapeShellCmd = 'escapeshellcmd';
         }
+
+        $command = $escapeShellCmd($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args)).$suppressOutput;
+
         exec($command, $output, $result);
 
         if($result == 127) {
