@@ -41,6 +41,7 @@ Supported options:
 * `gifsicle_options` (default: `array('-b', '-O5')`)
 * `jpegoptim_options` (default: `array('--strip-all', '--all-progressive')`)
 * `jpegtran_options` (default: `array('-optimize', '-progressive')`)
+* `advpng_options` (default: `array('-z', '-4', '-q')`)
 * `optipng_bin` (default: will be guessed) - you can enforce paths to binaries, but by default it will be guessed
 * `pngquant_bin`
 * `pngcrush_bin`
@@ -48,6 +49,7 @@ Supported options:
 * `gifsicle_bin`
 * `jpegoptim_bin`
 * `jpegtran_bin`
+* `advpng_bin`
 
 You can pass array of options as first argument of `ImageOptimizer\OptimizerFactory` constructor. Second argument is
 optionally `Psr\LoggerInterface`.
@@ -71,6 +73,7 @@ optionally `Psr\LoggerInterface`.
 * `jpegtran` - [homepage][5]
 * `jpegoptim` - [homepage][6]
 * `gifsicle` - [homepage][7]
+* `advpng` - [homepage][8]
 
 You can obtain concrete optimizer by passing his name to `ImageOptimizer\OptimizerFactory`::`get` method:
 
@@ -98,3 +101,4 @@ You can obtain concrete optimizer by passing his name to `ImageOptimizer\Optimiz
 [5]: http://jpegclub.org/jpegtran/
 [6]: http://freecode.com/projects/jpegoptim
 [7]: http://www.lcdf.org/gifsicle/
+[8]: http://www.advancemame.it/doc-advpng.html
