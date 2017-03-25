@@ -26,7 +26,7 @@ class SmartOptimizerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->internalOptimizer = $this->getMock('ImageOptimizer\\Optimizer');
+        $this->internalOptimizer = $this->createMock('ImageOptimizer\\Optimizer');
 
         $this->optimizer = new SmartOptimizer(array(
             self::SUPPORTED_TYPE => $this->internalOptimizer,

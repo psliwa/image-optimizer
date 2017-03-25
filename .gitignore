@@ -3,3 +3,4 @@ vendor/
 *.iml
 .idea
 .vagrant
+*.log
