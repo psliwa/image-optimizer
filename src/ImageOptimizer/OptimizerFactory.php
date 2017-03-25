@@ -39,6 +39,8 @@ class OptimizerFactory
         $resolver = new OptionsResolver();
         $resolver->setDefaults(array(
             'ignore_errors' => true,
+            'execute_only_first_png_optimizer' => false,
+            'execute_only_first_jpeg_optimizer' => true,
             'optipng_options' => array('-i0', '-o2', '-quiet'),
             'pngquant_options' => array('--force'),
             'pngcrush_options' => array('-reduce', '-q', '-ow'),
@@ -91,7 +93,7 @@ class OptimizerFactory
             $this->optimizers['optipng'],
             $this->optimizers['pngcrush'],
             $this->optimizers['advpng']
-        ));
+        ), $this->options['execute_only_first_png_optimizer']);
 
         $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('gifsicle'), $this->options['gifsicle_options'])
@@ -109,7 +111,7 @@ class OptimizerFactory
         $this->optimizers['jpeg'] = $this->optimizers['jpg'] = new ChainOptimizer(array(
             $this->unwrap($this->optimizers['jpegtran']),
             $this->unwrap($this->optimizers['jpegoptim']),
-        ), true);
+        ), $this->options['execute_only_first_jpeg_optimizer']);
 
         $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer(array(
             TypeGuesser::TYPE_GIF => $this->optimizers['gif'],
