@@ -40,6 +40,7 @@ Supported options:
 * `pngquant_options` (default: `array('--force')`)
 * `pngcrush_options` (default: `array('-reduce', '-q', '-ow')`)
 * `pngout_options` (default: `array('-s3', '-q', '-y')`)
+* `advpng_options` (default: `array('-z', '-4', '-q')`)
 * `gifsicle_options` (default: `array('-b', '-O5')`)
 * `jpegoptim_options` (default: `array('--strip-all', '--all-progressive')`)
 * `jpegtran_options` (default: `array('-optimize', '-progressive')`)
