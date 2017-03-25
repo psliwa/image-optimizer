@@ -34,7 +34,7 @@ automatically.
 Supported options:
 
 * `ignore_errors` (default: true)
-* `execute_only_first_png_optimizer` (default: false) - execute the first successful or all `png` optimizers
+* `execute_only_first_png_optimizer` (default: true) - execute the first successful or all `png` optimizers
 * `execute_only_first_jpeg_optimizer` (default: true) - execute the first successful or all `jpeg` optimizers
 * `optipng_options` (default: `array('-i0', '-o2', '-quiet')`) - an array of arguments to pass to the library
 * `pngquant_options` (default: `array('--force')`)

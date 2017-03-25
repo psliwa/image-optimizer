@@ -32,18 +32,21 @@ final class Command
             $suppressOutput = '';
             $escapeShellCmd = 'escapeshellarg';
         } else {
-            $suppressOutput = ' 1> /dev/null 2> /dev/null';
+            $suppressOutput = '  2>&1';
             $escapeShellCmd = 'escapeshellcmd';
         }
 
         $command = $escapeShellCmd($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args)).$suppressOutput;
 
-        exec($command, $output, $result);
+        exec($command, $outputLines, $result);
+        $output = join(PHP_EOL,$outputLines);
 
         if($result == 127) {
             throw new CommandNotFound(sprintf('Command "%s" not found.', $command));
-        } else if($result != 0) {
+        } else if($result !== 0) {
             throw new Exception(sprintf('Command failed, return code: %d, command: %s', $result, $command));
+        } else if($result === 0 && stripos(strtolower($output), 'error') !== false) {
+            throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s', $result, $command, $output));
         }
     }
 } 

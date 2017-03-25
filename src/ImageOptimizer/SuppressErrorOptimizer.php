@@ -23,7 +23,7 @@ class SuppressErrorOptimizer implements Optimizer
         try {
             $this->optimizer->optimize($filepath);
         } catch (Exception $e) {
-            $this->logger->info($e);
+            $this->logger->notice($e);
         }
     }
 

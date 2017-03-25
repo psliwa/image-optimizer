@@ -39,7 +39,7 @@ class OptimizerFactory
         $resolver = new OptionsResolver();
         $resolver->setDefaults(array(
             'ignore_errors' => true,
-            'execute_only_first_png_optimizer' => false,
+            'execute_only_first_png_optimizer' => true,
             'execute_only_first_jpeg_optimizer' => true,
             'optipng_options' => array('-i0', '-o2', '-quiet'),
             'pngquant_options' => array('--force'),
@@ -88,12 +88,12 @@ class OptimizerFactory
         $this->optimizers['advpng'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('advpng'), $this->options['advpng_options'])
         ));
-        $this->optimizers['png'] = new ChainOptimizer(array(
-            $this->optimizers['pngquant'],
-            $this->optimizers['optipng'],
-            $this->optimizers['pngcrush'],
-            $this->optimizers['advpng']
-        ), $this->options['execute_only_first_png_optimizer']);
+        $this->optimizers['png'] = $this->wrap(new ChainOptimizer(array(
+            $this->unwrap($this->optimizers['pngquant']),
+            $this->unwrap($this->optimizers['optipng']),
+            $this->unwrap($this->optimizers['pngcrush']),
+            $this->unwrap($this->optimizers['advpng'])
+        ), $this->options['execute_only_first_png_optimizer'], $this->logger));
 
         $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(new CommandOptimizer(
             new Command($this->executable('gifsicle'), $this->options['gifsicle_options'])
@@ -108,10 +108,10 @@ class OptimizerFactory
                 return array('-outfile', $filepath);
             }
         ));
-        $this->optimizers['jpeg'] = $this->optimizers['jpg'] = new ChainOptimizer(array(
+        $this->optimizers['jpeg'] = $this->optimizers['jpg'] = $this->wrap(new ChainOptimizer(array(
             $this->unwrap($this->optimizers['jpegtran']),
             $this->unwrap($this->optimizers['jpegoptim']),
-        ), $this->options['execute_only_first_jpeg_optimizer']);
+        ), $this->options['execute_only_first_jpeg_optimizer'], $this->logger));
 
         $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer(array(
             TypeGuesser::TYPE_GIF => $this->optimizers['gif'],
