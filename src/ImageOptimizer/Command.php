@@ -36,7 +36,7 @@ final class Command
             $escapeShellCmd = 'escapeshellcmd';
         }
 
-        $command = $escapeShellCmd($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args)).$suppressOutput;
+        $command = $escapeShellCmd($this->cmd).' '.implode(' ', array_map($escapeShellCmd, $args)).$suppressOutput;
 
         exec($command, $outputLines, $result);
         $output = join(PHP_EOL,$outputLines);
