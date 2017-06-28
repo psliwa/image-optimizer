@@ -46,7 +46,7 @@ final class Command
             throw new Exception(sprintf('Command failed, return code: %d, command: %s.', $result, $command));
         }
 
-        if($result === 0 && stripos($output, 'error') !== false) {
+        if(stripos($output, 'error') !== false) {
             throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s.', $result, $command, $output));
         }
     }
