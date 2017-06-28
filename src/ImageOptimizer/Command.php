@@ -20,10 +20,6 @@ final class Command
 
     public function execute(array $customArgs = array())
     {
-        if(!is_executable($this->cmd)) {
-            throw new CommandNotFound(sprintf('Command "%s" not found.', $this->cmd));
-        }
-
         $args = array_merge($this->args, $customArgs);
 
         $isWindowsPlatform = defined('PHP_WINDOWS_VERSION_BUILD');
@@ -32,21 +28,26 @@ final class Command
             $suppressOutput = '';
             $escapeShellCmd = 'escapeshellarg';
         } else {
-            $suppressOutput = '  2>&1';
+            $suppressOutput = ' 2>&1';
             $escapeShellCmd = 'escapeshellcmd';
         }
 
-        $command = $escapeShellCmd($this->cmd).' '.implode(' ', array_map('escapeshellarg', $args)).$suppressOutput;
+        $commandArgs = 0 === count($args) ? '' : ' '.implode(' ', array_map('escapeshellarg', $args));
+        $command = $escapeShellCmd($this->cmd).$commandArgs.$suppressOutput;
 
         exec($command, $outputLines, $result);
-        $output = join(PHP_EOL,$outputLines);
+        $output = implode(PHP_EOL,$outputLines);
 
         if($result == 127) {
-            throw new CommandNotFound(sprintf('Command "%s" not found.', $command));
-        } else if($result !== 0) {
-            throw new Exception(sprintf('Command failed, return code: %d, command: %s', $result, $command));
-        } else if($result === 0 && stripos(strtolower($output), 'error') !== false) {
-            throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s', $result, $command, $output));
+            throw new CommandNotFound(sprintf('Command "%s" not found.', $this->cmd));
+        }
+
+        if($result !== 0) {
+            throw new Exception(sprintf('Command failed, return code: %d, command: %s.', $result, $command));
+        }
+
+        if($result === 0 && stripos($output, 'error') !== false) {
+            throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s.', $result, $command, $output));
         }
     }
 } 
