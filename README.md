@@ -4,19 +4,25 @@ This library is handy and very easy to use optimizer for image files. It uses [o
 so before use it you should install proper libraries on your server. Project contains Vagrantfile that defines testing
 virtual machine with all libraries installed, so you can check Vagrantfile how to install all those stuff.
 
-Thanks to ImageOptimizer and librares that it uses, your image files can be **10%-70% smaller**.
+Thanks to ImageOptimizer and libraries that it uses, your image files can be **10%-70% smaller**.
+
+# Installation
+
+Using composer:
+
+    composer require ps/image-optimizer
 
 # Basic usage
 
 ```php
 
-    $factory = new \ImageOptimizer\OptimizerFactory();
-    $optimizer = $factory->get();
+$factory = new \ImageOptimizer\OptimizerFactory();
+$optimizer = $factory->get();
 
-    $filepath = /* path to image */;
+$filepath = /* path to image */;
 
-    $optimizer->optimize($filepath);
-    //optimized file overwrites original one
+$optimizer->optimize($filepath);
+//optimized file overwrites original one
 
 ```
 
