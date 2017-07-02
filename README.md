@@ -15,7 +15,6 @@ Using composer:
 # Basic usage
 
 ```php
-
 $factory = new \ImageOptimizer\OptimizerFactory();
 $optimizer = $factory->get();
 
@@ -23,7 +22,6 @@ $filepath = /* path to image */;
 
 $optimizer->optimize($filepath);
 //optimized file overwrites original one
-
 ```
 
 # Configuration
@@ -63,9 +61,7 @@ You can pass array of options as first argument of `ImageOptimizer\OptimizerFact
 optionally `Psr\LoggerInterface`.
 
 ```php
-
-    $factory = new \ImageOptimizer\OptimizerFactory(array('ignore_errors' => false), $logger);
-
+$factory = new \ImageOptimizer\OptimizerFactory(array('ignore_errors' => false), $logger);
 ```
 
 # Supported optimizers
@@ -86,16 +82,14 @@ optionally `Psr\LoggerInterface`.
 You can obtain concrete optimizer by passing his name to `ImageOptimizer\OptimizerFactory`::`get` method:
 
 ```php
+//default optimizer is `smart`
+$optimizer = $factory->get();
 
-    //default optimizer is `smart`
-    $optimizer = $factory->get();
+//png optimizer
+$pngOptimizer = $factory->get('png');
 
-    //png optimizer
-    $pngOptimizer = $factory->get('png');
-
-    //jpegoptim optimizer etc.
-    $jpgOptimizer = $factory->get('jpegoptim');
-
+//jpegoptim optimizer etc.
+$jpgOptimizer = $factory->get('jpegoptim');
 ```
 
 # License
