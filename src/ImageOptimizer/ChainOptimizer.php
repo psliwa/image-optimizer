@@ -15,7 +15,7 @@ class ChainOptimizer implements Optimizer
     private $executeFirst;
     private $logger;
 
-    public function __construct(array $optimizers, $executeFirst, LoggerInterface $logger)
+    public function __construct(array $optimizers, $executeFirst = false, LoggerInterface $logger = null)
     {
         $this->optimizers = $optimizers;
         $this->executeFirst = (boolean) $executeFirst;
@@ -31,7 +31,9 @@ class ChainOptimizer implements Optimizer
 
                 if($this->executeFirst) break;
             } catch (Exception $e) {
-                $this->logger->notice($e);
+                if (null !== $this->logger) {
+                    $this->logger->notice($e);
+                }
                 $exceptions[] = $e;
             }
         }
