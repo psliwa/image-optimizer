@@ -5,6 +5,7 @@ namespace ImageOptimizer;
 
 use ImageOptimizer\Exception\Exception;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ChainOptimizer implements Optimizer
 {
@@ -20,6 +21,9 @@ class ChainOptimizer implements Optimizer
         $this->optimizers = $optimizers;
         $this->executeFirst = (boolean) $executeFirst;
         $this->logger = $logger;
+        if (null === $this->logger) {
+            $this->logger = new NullLogger();
+        }
     }
 
     public function optimize($filepath)
@@ -31,9 +35,7 @@ class ChainOptimizer implements Optimizer
 
                 if($this->executeFirst) break;
             } catch (Exception $e) {
-                if (null !== $this->logger) {
-                    $this->logger->notice($e);
-                }
+                $this->logger->notice($e);
                 $exceptions[] = $e;
             }
         }
