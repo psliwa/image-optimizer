@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+* 1.1.3 (2018-04-09)
+
+  * [#53, #54, #50] Compatibility with Symfony 4
+
+* 1.1.2 (2017-07-21)
+
+  * [#44] Throw exception for Permissions Denied
+
 * 1.1.1 (2017-06-28)
 
   * [#30] Fix "Command not found" issue related to open_basedir
