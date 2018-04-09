@@ -1,5 +1,5 @@
 {
-    "name": "ps/image-optimizer",
+    "name": "hectorprats/image-optimizer",
     "type": "library",
     "description": "Image optimization / compression library. This library is able to optimize png, jpg and gif files in very easy and handy way. It uses optipng, pngquant, pngcrush, pngout, gifsicle, jpegoptim and jpegtran tools.",
     "keywords": ["image optimizer", "compression", "image", "optimization", "jpegoptim", "optipng"],
