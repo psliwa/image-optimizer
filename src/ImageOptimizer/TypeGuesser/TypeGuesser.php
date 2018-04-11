@@ -8,6 +8,7 @@ interface TypeGuesser
     const TYPE_JPEG = 'jpeg';
     const TYPE_PNG = 'png';
     const TYPE_GIF = 'gif';
+    const TYPE_SVG = 'svg';
     const TYPE_UNKNOWN = 'unknown';
 
     /**

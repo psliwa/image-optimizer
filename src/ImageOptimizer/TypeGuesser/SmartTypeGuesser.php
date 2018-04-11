@@ -7,21 +7,30 @@ namespace ImageOptimizer\TypeGuesser;
 class SmartTypeGuesser implements TypeGuesser
 {
     /**
-     * @var TypeGuesser
+     * @var TypeGuesser[]
      */
-    private $typeGuesser;
+    private $typeGuessers;
 
     public function __construct()
     {
         try {
-            $this->typeGuesser = new GdTypeGuesser();
+            $this->typeGuessers[] = new GdTypeGuesser();
         } catch (\RuntimeException $e) {
-            $this->typeGuesser = new ExtensionTypeGuesser();
+            // ignore, skip GdTypeGuesser
         }
+        $this->typeGuessers[] = new ExtensionTypeGuesser();
     }
 
     public function guess($filepath)
     {
-        return $this->typeGuesser->guess($filepath);
+        foreach($this->typeGuessers as $typeGuesser) {
+            $type = $typeGuesser->guess($filepath);
+
+            if($type !== self::TYPE_UNKNOWN) {
+                return $type;
+            }
+        }
+
+        return self::TYPE_UNKNOWN;
     }
 }

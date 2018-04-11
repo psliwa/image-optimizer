@@ -23,6 +23,8 @@ class ExtensionTypeGuesser implements TypeGuesser
             case 'jpg':
             case 'jpeg':
                 return self::TYPE_JPEG;
+            case 'svg':
+                return self::TYPE_SVG;
             default:
                 return self::TYPE_UNKNOWN;
         }

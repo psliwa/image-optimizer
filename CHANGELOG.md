@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* 1.2.0 (2018-04-11)
+
+  * [#46] Add support for svg files (using svgo library)
+
 * 1.1.3 (2018-04-09)
 
   * [#53, #54, #50] Compatibility with Symfony 4

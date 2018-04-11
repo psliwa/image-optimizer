@@ -1,6 +1,6 @@
 # Image Optimizer
 
-This library is handy and very easy to use optimizer for image files. It uses [optipng][2], [pngquant][1], [jpegoptim][6] and few more libraries,
+This library is handy and very easy to use optimizer for image files. It uses [optipng][2], [pngquant][1], [jpegoptim][6], [svgo][9] and few more libraries,
 so before use it you should install proper libraries on your server. Project contains Vagrantfile that defines testing
 virtual machine with all libraries installed, so you can check Vagrantfile how to install all those stuff.
 
@@ -48,6 +48,7 @@ Supported options:
 * `gifsicle_options` (default: `array('-b', '-O5')`)
 * `jpegoptim_options` (default: `array('--strip-all', '--all-progressive')`)
 * `jpegtran_options` (default: `array('-optimize', '-progressive')`)
+* `svgo_options` (default: `array('--disable=cleanupIDs')`)
 * `optipng_bin` (default: will be guessed) - you can enforce paths to binaries, but by default it will be guessed
 * `pngquant_bin`
 * `pngcrush_bin`
@@ -56,6 +57,7 @@ Supported options:
 * `gifsicle_bin`
 * `jpegoptim_bin`
 * `jpegtran_bin`
+* `svgo_bin`
 
 You can pass array of options as first argument of `ImageOptimizer\OptimizerFactory` constructor. Second argument is
 optionally `Psr\LoggerInterface`.
@@ -78,6 +80,7 @@ $factory = new \ImageOptimizer\OptimizerFactory(array('ignore_errors' => false),
 * `jpegtran` - [homepage][6]
 * `jpegoptim` - [homepage][7]
 * `gifsicle` - [homepage][8]
+* `svgo` - [homepage][9]
 
 You can obtain concrete optimizer by passing his name to `ImageOptimizer\OptimizerFactory`::`get` method:
 
@@ -104,3 +107,4 @@ $jpgOptimizer = $factory->get('jpegoptim');
 [6]: http://jpegclub.org/jpegtran/
 [7]: http://freecode.com/projects/jpegoptim
 [8]: http://www.lcdf.org/gifsicle/
+[9]: https://github.com/svg/svgo

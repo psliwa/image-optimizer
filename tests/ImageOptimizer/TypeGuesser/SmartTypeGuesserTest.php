@@ -4,11 +4,11 @@
 namespace ImageOptimizer\TypeGuesser;
 
 
-class ExtensionTypeGuesserTest extends AbstractTypeGuesserTest
+class SmartTypeGuesserTest extends AbstractTypeGuesserTest
 {
     protected function createTypeGuesser()
     {
-        return new ExtensionTypeGuesser();
+        return new SmartTypeGuesser();
     }
 
     public function validImageFileProvider()

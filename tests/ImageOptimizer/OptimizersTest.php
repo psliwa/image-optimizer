@@ -47,6 +47,7 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
         $pngWithoutExtension = __DIR__.'/Resources/samplepng';
         $gifFile = __DIR__.'/Resources/sample.gif';
         $jpgFile = __DIR__.'/Resources/sample.jpg';
+        $svgFile = __DIR__.'/Resources/sample.svg';
 
         return array(
             array(
@@ -81,6 +82,9 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 'jpg', $jpgFile, 95,
+            ),
+            array(
+                'svg', $svgFile, 90,
             ),
             array(
                 'smart', $pngFile,
@@ -119,7 +123,7 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        foreach(array('sample.gif', 'sample.jpg', 'sample.png', 'samplepng') as $file) {
+        foreach(array('sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg') as $file) {
             @unlink(__DIR__.'/Resources/'.self::TMP_DIR.'/'.$file);
         }
     }

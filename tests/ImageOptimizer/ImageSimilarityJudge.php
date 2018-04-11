@@ -4,6 +4,7 @@
 namespace ImageOptimizer;
 
 use ImageOptimizer\TypeGuesser\SmartTypeGuesser;
+use ImageOptimizer\TypeGuesser\TypeGuesser;
 
 class ImageSimilarityJudge
 {
@@ -17,6 +18,13 @@ class ImageSimilarityJudge
      */
     public static function judge($image1, $image2)
     {
+        $typeGuesser = new SmartTypeGuesser();
+
+        // svg images are not supported, so judge the as identical
+        if($typeGuesser->guess($image1) === TypeGuesser::TYPE_SVG || $typeGuesser->guess($image2) === TypeGuesser::TYPE_SVG) {
+            return 1;
+        }
+
         list($width, $height) = getimagesize($image1);
 
         $resource1 = self::createResource($image1);
