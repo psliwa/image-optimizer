@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* 1.2.1 (2018-12-17)
+
+  * [#64] Bump psr/log version to 1.*
+
 * 1.2.0 (2018-04-11)
 
   * [#46] Add support for svg files (using svgo library)
