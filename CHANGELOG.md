@@ -5,6 +5,7 @@ CHANGELOG
 
   * [#21] Add configurable timeout for single optimizer. Use
     symfony-process component as an implementation.
+  * [#60] Skip larger files for pngquant optimizer
 
 * 1.2.2 (2019-06-21)
 
