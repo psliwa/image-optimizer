@@ -4,7 +4,9 @@
 namespace ImageOptimizer;
 
 
-class ImageSimilarityJudgeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ImageSimilarityJudgeTest extends TestCase
 {
     /**
      * @test

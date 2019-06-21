@@ -1,4 +1,4 @@
-# Image Optimizer
+# Image Optimizer [![Build Status](https://travis-ci.org/psliwa/image-optimizer.svg?branch=master)](https://travis-ci.org/psliwa/image-optimizer)
 
 This library is handy and very easy to use optimizer for image files. It uses [optipng][2], [pngquant][1], [jpegoptim][6], [svgo][9] and few more libraries,
 so before use it you should install proper libraries on your server. Project contains Vagrantfile that defines testing

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/bootstrap.php">
+<phpunit bootstrap="tests/bootstrap.php" beStrictAboutTestsThatDoNotTestAnything="false">
     <testsuites>
         <testsuite name="image-optimizer">
             <directory>tests</directory>

@@ -2,10 +2,12 @@
 
 namespace ImageOptimizer;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Test Command in- and outputs.
  */
-class CommandTest extends \PHPUnit_Framework_TestCase
+class CommandTest extends TestCase
 {
     /**
      * Check if a CommandNotFound exception is thrown when the exit code is not 127.

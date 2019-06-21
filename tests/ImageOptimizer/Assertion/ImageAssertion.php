@@ -3,6 +3,7 @@
 namespace ImageOptimizer\Assertion;
 
 use ImageOptimizer\ImageSimilarityJudge;
+use PHPUnit\Framework\Assert;
 
 class ImageAssertion
 {
@@ -25,7 +26,7 @@ class ImageAssertion
         $originalFilesize = filesize($this->originalImage);
         $actualPercent = filesize($this->optimizedImage)/ $originalFilesize * 100;
 
-        \PHPUnit_Framework_Assert::assertLessThan($percent, $actualPercent, 'compression level is too small');
+        Assert::assertLessThan($percent, $actualPercent, 'compression level is too small');
 
         return $this;
     }
@@ -35,8 +36,8 @@ class ImageAssertion
         list($width1, $height1) = getimagesize($this->originalImage);
         list($width2, $height2) = getimagesize($this->optimizedImage);
 
-        \PHPUnit_Framework_Assert::assertEquals($width1, $width2);
-        \PHPUnit_Framework_Assert::assertEquals($height1, $height2);
+        Assert::assertEquals($width1, $width2);
+        Assert::assertEquals($height1, $height2);
 
         return $this;
     }
@@ -46,7 +47,7 @@ class ImageAssertion
         $similarity = ImageSimilarityJudge::judge($this->originalImage, $this->optimizedImage);
         $percent = $percent/100;
 
-        \PHPUnit_Framework_Assert::assertGreaterThan($percent, $similarity);
+        Assert::assertGreaterThan($percent, $similarity);
 
         return $this;
     }

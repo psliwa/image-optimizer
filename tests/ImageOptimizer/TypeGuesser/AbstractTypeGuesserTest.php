@@ -4,7 +4,9 @@
 namespace ImageOptimizer\TypeGuesser;
 
 
-abstract class AbstractTypeGuesserTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+abstract class AbstractTypeGuesserTest extends TestCase
 {
     /**
      * @var TypeGuesser

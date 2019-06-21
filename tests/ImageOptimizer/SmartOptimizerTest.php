@@ -5,8 +5,9 @@ namespace ImageOptimizer;
 
 
 use ImageOptimizer\TypeGuesser\TypeGuesser;
+use PHPUnit\Framework\TestCase;
 
-class SmartOptimizerTest extends \PHPUnit_Framework_TestCase
+class SmartOptimizerTest extends TestCase
 {
     const SUPPORTED_TYPE = 'png';
     const UNSUPPORTED_TYPE = 'gif';

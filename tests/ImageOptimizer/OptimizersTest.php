@@ -4,8 +4,9 @@ namespace ImageOptimizer;
 
 use ImageOptimizer\Assertion\ImageAssertion;
 use ImageOptimizer\Exception\CommandNotFound;
+use PHPUnit\Framework\TestCase;
 
-class OptimizersTest extends \PHPUnit_Framework_TestCase
+class OptimizersTest extends TestCase
 {
     const TMP_DIR = 'tmp';
 

@@ -54,9 +54,7 @@ class OptimizerFactory
             'single_optimizer_timeout_in_seconds' => null
         ));
 
-        $method = is_callable(array($resolver, 'setDefined')) ? 'setDefined' : 'setOptional';
-
-        $resolver->$method(array(
+        $resolver->setDefined(array(
             'optipng_bin',
             'pngquant_bin',
             'pngcrush_bin',
