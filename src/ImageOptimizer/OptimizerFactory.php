@@ -51,7 +51,7 @@ class OptimizerFactory
             'advpng_options' => ['-z', '-4', '-q'],
             'svgo_options' => ['--disable=cleanupIDs'],
             'custom_optimizers' => [],
-            'single_optimizer_timeout_in_seconds' => null
+            'single_optimizer_timeout_in_seconds' => 60
         ]);
 
         $resolver->setDefined([

@@ -26,7 +26,7 @@ class CommandTest extends TestCase
      * Check if an exception is thrown when the exit code is not 0, but the command is found.
      *
      * @expectedException \Exception
-     * @expectedExceptionMessage Command failed, return code: 2, command: 'ls' '/dir/does/not/exist'.
+     * @expectedExceptionMessageRegExp /Command failed, return code: 2/
      */
     public function testCommandFailed()
     {
@@ -38,7 +38,7 @@ class CommandTest extends TestCase
      * Check if an exception is thrown when the output contains the word "error".
      *
      * @expectedException \Exception
-     * @expectedExceptionMessage Command failed, return code: 0, command: 'echo' 'error', stderr: error.
+     * @expectedExceptionMessageRegExp /Command failed, return code: 0/
      */
     public function testCommandSucceededButErrorInOutput()
     {
@@ -50,7 +50,7 @@ class CommandTest extends TestCase
      * Check if an exception is thrown when the command times out.
      *
      * @expectedException \Exception
-     * @expectedExceptionMessage The process "'sleep' '2'" exceeded the timeout of 0.1 seconds.
+     * @expectedExceptionMessageRegExp /exceeded the timeout/
      */
     public function testCommandTimeout()
     {

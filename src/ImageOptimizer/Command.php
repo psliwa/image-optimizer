@@ -44,12 +44,8 @@ final class Command
                 throw new CommandNotFound(sprintf('Command "%s" not found.', $this->cmd));
             }
 
-            if($exitCode !== 0) {
-                throw new Exception(sprintf('Command failed, return code: %d, command: %s.', $exitCode, $commandLine));
-            }
-
-            if(stripos($output, 'error') !== false || stripos($output, 'permission') !== false) {
-                throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s.', $exitCode, $commandLine, trim($output)));
+            if($exitCode !== 0 || stripos($output, 'error') !== false || stripos($output, 'permission') !== false) {
+                throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s', $exitCode, $commandLine, trim($output)));
             }
         } catch(RuntimeException $e) {
             throw new Exception($e->getMessage(), $e->getCode(), $e);
