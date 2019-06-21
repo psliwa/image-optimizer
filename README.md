@@ -115,6 +115,29 @@ And then usage:
 $customOptimizer = $factory->get('some_optimizier');
 ```
 
+# I got "All optimizers failed to optimize the file"
+
+Probably you don't have required optimazers installed. Let's have a look
+at `Vagrantfile` file in order to see an example how to install those
+commands.
+
+In order to see all intermediate errors, you can use logger (be default
+`NullLogger` is used, so logs are not available):
+
+```php
+class StdoutLogger extends \Psr\Log\AbstractLogger { 
+    public function log($level, $message, array $context = array()) { 
+        echo $message."\n"; 
+    }
+}
+
+$factory = new \ImageOptimizer\OptimizerFactory(array(), new StdoutLogger());
+
+$factory->get()->optimize('yourfile.jpg');
+
+// and have a look at stdout
+```
+
 # License
 
 **MIT**
