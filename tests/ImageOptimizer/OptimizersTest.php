@@ -19,6 +19,12 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
 
         $factory = new OptimizerFactory(array(
             'ignore_errors' => $optimizerName === 'smart',
+            'custom_optimizers' => array(
+                'custom_optimizer' => array(
+                    'command' => 'optipng',
+                    'args' => array('-i0', '-o2', '-quiet')
+                )
+            )
         ));
         $optimizer = $factory->get($optimizerName);
 
@@ -88,6 +94,9 @@ class OptimizersTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 'smart', $pngFile,
+            ),
+            array(
+                'custom_optimizer', $pngFile, 98.5
             ),
         );
     }

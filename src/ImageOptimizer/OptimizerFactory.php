@@ -50,6 +50,7 @@ class OptimizerFactory
             'jpegtran_options' => array('-optimize', '-progressive'),
             'advpng_options' => array('-z', '-4', '-q'),
             'svgo_options' => array('--disable=cleanupIDs'),
+            'custom_optimizers' => array()
         ));
 
         $method = is_callable(array($resolver, 'setDefined')) ? 'setDefined' : 'setOptional';
@@ -63,7 +64,8 @@ class OptimizerFactory
             'jpegoptim_bin',
             'jpegtran_bin',
             'advpng_bin',
-            'svgo_bin'
+            'svgo_bin',
+            'custom_optimizers'
         ));
 
         return $resolver;
@@ -121,6 +123,12 @@ class OptimizerFactory
                 return array('--input' => $filepath, '--output' => $filepath);
             }
         ));
+
+        foreach($this->options['custom_optimizers'] as $key => $options) {
+            $this->optimizers[$key] = $this->wrap(new CommandOptimizer(
+                new Command($this->executable($options['command'], isset($options['args']) ? $options['args'] : array()))
+            ));
+        }
 
         $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer(array(
             TypeGuesser::TYPE_GIF => $this->optimizers['gif'],

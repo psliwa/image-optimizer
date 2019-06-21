@@ -49,6 +49,7 @@ Supported options:
 * `jpegoptim_options` (default: `array('--strip-all', '--all-progressive')`)
 * `jpegtran_options` (default: `array('-optimize', '-progressive')`)
 * `svgo_options` (default: `array('--disable=cleanupIDs')`)
+* `custom_optimizers` (default `array()`)
 * `optipng_bin` (default: will be guessed) - you can enforce paths to binaries, but by default it will be guessed
 * `pngquant_bin`
 * `pngcrush_bin`
@@ -93,6 +94,25 @@ $pngOptimizer = $factory->get('png');
 
 //jpegoptim optimizer etc.
 $jpgOptimizer = $factory->get('jpegoptim');
+```
+
+# Custom optimizers
+
+You can easily define custom optimizers:
+
+```php
+$factory = new \ImageOptimizer\OptimizerFactory(array('custom_optimizers' => array(
+    'some_optimizier' => array(
+        'command' => 'some_command',
+        'args' => array('-some-flag')
+    )
+)), $logger);
+```
+
+And then usage:
+
+```php
+$customOptimizer = $factory->get('some_optimizier');
 ```
 
 # License
