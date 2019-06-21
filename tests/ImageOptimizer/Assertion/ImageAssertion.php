@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ImageOptimizer\Assertion;
 
@@ -10,18 +11,18 @@ class ImageAssertion
     private $originalImage;
     private $optimizedImage;
 
-    public function __construct($originalImage, $optimizedImage)
+    public function __construct(string $originalImage, string $optimizedImage)
     {
         $this->originalImage = $originalImage;
         $this->optimizedImage = $optimizedImage;
     }
 
-    public static function create($originalImage, $optimizedImage)
+    public static function create(string $originalImage, string $optimizedImage): ImageAssertion
     {
         return new self($originalImage, $optimizedImage);
     }
 
-    public function optimizedFileIsSmallerThanPercent($percent)
+    public function optimizedFileIsSmallerThanPercent(float $percent): ImageAssertion
     {
         $originalFilesize = filesize($this->originalImage);
         $actualPercent = filesize($this->optimizedImage)/ $originalFilesize * 100;
@@ -31,7 +32,7 @@ class ImageAssertion
         return $this;
     }
 
-    public function imagesHaveTheSameDimensions()
+    public function imagesHaveTheSameDimensions(): ImageAssertion
     {
         list($width1, $height1) = getimagesize($this->originalImage);
         list($width2, $height2) = getimagesize($this->optimizedImage);
@@ -42,7 +43,7 @@ class ImageAssertion
         return $this;
     }
 
-    public function imagesAreSimilarInPercent($percent)
+    public function imagesAreSimilarInPercent(float $percent): ImageAssertion
     {
         $similarity = ImageSimilarityJudge::judge($this->originalImage, $this->optimizedImage);
         $percent = $percent/100;

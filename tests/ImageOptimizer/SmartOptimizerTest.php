@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -29,12 +29,12 @@ class SmartOptimizerTest extends TestCase
     {
         $this->internalOptimizer = $this->createMock('ImageOptimizer\\Optimizer');
 
-        $this->optimizer = new SmartOptimizer(array(
+        $this->optimizer = new SmartOptimizer([
             self::SUPPORTED_TYPE => $this->internalOptimizer,
-        ), new SmartOptimizerTest_TypeGuesser(array(
+        ], new SmartOptimizerTest_TypeGuesser([
             self::SUPPORTED_FILEPATH => self::SUPPORTED_TYPE,
             self::UNSUPPORTED_FILEPATH => self::UNSUPPORTED_TYPE,
-        )));
+        ]));
     }
 
     /**
@@ -83,8 +83,8 @@ class SmartOptimizerTest_TypeGuesser implements TypeGuesser
         $this->filepathToType = $filepathToType;
     }
 
-    public function guess($filepath)
+    public function guess(string $filepath): string
     {
-        return isset($this->filepathToType[$filepath]) ? $this->filepathToType[$filepath] : null;
+        return isset($this->filepathToType[$filepath]) ? $this->filepathToType[$filepath] : 'unknown';
     }
 }

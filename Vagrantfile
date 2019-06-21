@@ -8,9 +8,10 @@ VAGRANTFILE_API_VERSION = "2"
 optipngVersion = "0.7.5"
 
 $provision = <<PROVISION
+add-apt-repository -y ppa:ondrej/php
 apt-get update
 apt-get install -y npm nodejs-legacy
-apt-get install -y php php-gd php-dom php-mbstring
+apt-get install -y php php-gd php-xml php-mbstring
 apt-get install -y advancecomp pngcrush gifsicle jpegoptim
 apt-get install -y libjpeg-progs libjpeg8-dbg libimage-exiftool-perl
 apt-get install -y imagemagick pngnq tar unzip libpng-dev git

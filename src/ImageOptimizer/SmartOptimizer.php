@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -21,7 +21,7 @@ class SmartOptimizer implements Optimizer
         $this->typeGuesser = $typeGuesser ?: new SmartTypeGuesser();
     }
 
-    public function optimize($filepath)
+    public function optimize(string $filepath): void
     {
         $type = $this->typeGuesser->guess($filepath);
 

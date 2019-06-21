@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -13,5 +13,5 @@ interface Optimizer
      * @return void
      * @throws Exception
      */
-    public function optimize($filepath);
+    public function optimize(string $filepath): void;
 } 

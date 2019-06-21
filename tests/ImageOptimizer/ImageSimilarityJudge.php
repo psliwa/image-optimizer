@@ -1,10 +1,13 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
+use function imagecolorat;
+use function imagecolorsforindex;
 use ImageOptimizer\TypeGuesser\SmartTypeGuesser;
 use ImageOptimizer\TypeGuesser\TypeGuesser;
+use InvalidArgumentException;
 
 class ImageSimilarityJudge
 {
@@ -16,7 +19,7 @@ class ImageSimilarityJudge
      * @return float images similarity - value from 0 to 1. 1 - images are the same, 0 - images are totally different,
      * 0.98 - images are very similar
      */
-    public static function judge($image1, $image2)
+    public static function judge(string $image1, string $image2): float
     {
         $typeGuesser = new SmartTypeGuesser();
 
@@ -46,7 +49,7 @@ class ImageSimilarityJudge
         return 1 - ($width && $height ? $delta/(3*255*$width*$height) : 0);
     }
 
-    private static function createResource($image)
+    private static function createResource(string $image)
     {
         $typeGuesser = new SmartTypeGuesser();
         $type = $typeGuesser->guess($image);
@@ -54,13 +57,13 @@ class ImageSimilarityJudge
         $function = 'imagecreatefrom'.$type;
 
         if(!function_exists($function)) {
-            throw new \InvalidArgumentException(sprintf('Image "%s" is not supported', $type));
+            throw new InvalidArgumentException(sprintf('Image "%s" is not supported', $type));
         }
 
         return $function($image);
     }
 
-    private static function colorAt($image, $x, $y)
+    private static function colorAt($image, int $x, int $y): array
     {
         $colorIndex = imagecolorat($image, $x, $y);
         return imagecolorsforindex($image, $colorIndex);

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
 
@@ -11,7 +11,7 @@ class ExtensionTypeGuesser implements TypeGuesser
      * @param string $filepath
      * @return string Image file type, value of one of the TYPE_* const
      */
-    public function guess($filepath)
+    public function guess(string $filepath): string
     {
         $ext = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
 

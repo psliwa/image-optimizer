@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -22,9 +22,9 @@ class ChainOptimizer implements Optimizer
         $this->logger = $logger;
     }
 
-    public function optimize($filepath)
+    public function optimize(string $filepath): void
     {
-        $exceptions = array();
+        $exceptions = [];
         foreach($this->optimizers as $optimizer) {
             try {
                 $optimizer->optimize($filepath);

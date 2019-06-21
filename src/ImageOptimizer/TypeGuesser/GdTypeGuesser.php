@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
 
@@ -13,7 +13,7 @@ class GdTypeGuesser implements TypeGuesser
         }
     }
 
-    public function guess($filepath)
+    public function guess(string $filepath): string
     {
         list(,,$type) = getimagesize($filepath);
 

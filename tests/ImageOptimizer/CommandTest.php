@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -29,7 +30,7 @@ class CommandTest extends TestCase
      */
     public function testCommandFailed()
     {
-        $command = new Command('ls', array('/dir/does/not/exist'));
+        $command = new Command('ls', ['/dir/does/not/exist']);
         $command->execute();
     }
 
@@ -41,7 +42,7 @@ class CommandTest extends TestCase
      */
     public function testCommandSucceededButErrorInOutput()
     {
-        $command = new Command('echo', array('error'));
+        $command = new Command('echo', ['error']);
         $command->execute();
     }
 
@@ -53,7 +54,7 @@ class CommandTest extends TestCase
      */
     public function testCommandTimeout()
     {
-        $command = new Command('sleep', array('2'), 0.1);
+        $command = new Command('sleep', ['2'], 0.1);
         $command->execute();
     }
 
@@ -63,7 +64,7 @@ class CommandTest extends TestCase
      */
     public function testCommandTimeout_timeoutNotExceeded()
     {
-        $command = new Command('ls', array(), 1);
+        $command = new Command('ls', [], 1.);
         $command->execute();
     }
 

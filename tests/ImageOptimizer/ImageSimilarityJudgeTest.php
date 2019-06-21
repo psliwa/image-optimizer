@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -12,7 +12,7 @@ class ImageSimilarityJudgeTest extends TestCase
      * @test
      * @dataProvider judgeProvider
      */
-    public function testJudge($image1, $image2, $expectedGreaterThan, $expectedLessThan = 1)
+    public function testJudge(string $image1, string $image2, float $expectedGreaterThan, float $expectedLessThan = 1.)
     {
         $actual = ImageSimilarityJudge::judge(__DIR__.'/Resources/'.$image1, __DIR__.'/Resources/'.$image2);
 
@@ -22,20 +22,12 @@ class ImageSimilarityJudgeTest extends TestCase
 
     public function judgeProvider()
     {
-        return array(
-            array(
-                'sample.png', 'sample.png', 1, 1,
-            ),
-            array(
-                'sample.png', 'sample-negative.png', 0, 0.6,
-            ),
-            array(
-                'sample.png', 'sample-flip.png', 0, 0.85,
-            ),
-            array(
-                'sample.jpg', 'sample-low-quality.jpg', 0.9, 0.989,
-            ),
-        );
+        return [
+            ['sample.png', 'sample.png', 1., 1.],
+            ['sample.png', 'sample-negative.png', 0, 0.6],
+            ['sample.png', 'sample-flip.png', 0., 0.85],
+            ['sample.jpg', 'sample-low-quality.jpg', 0.9, 0.989],
+        ];
     }
 }
  

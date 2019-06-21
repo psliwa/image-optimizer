@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -15,12 +15,12 @@ class OptimizerFactory
 {
     const OPTIMIZER_SMART = 'smart';
 
-    private $optimizers = array();
+    private $optimizers = [];
     private $options;
     private $executableFinder;
     private $logger;
 
-    public function __construct(array $options = array(), LoggerInterface $logger = null)
+    public function __construct(array $options = [], LoggerInterface $logger = null)
     {
         $this->executableFinder = new ExecutableFinder();
         $this->logger = $logger ?: new NullLogger();
@@ -29,32 +29,32 @@ class OptimizerFactory
         $this->setUpOptimizers();
     }
 
-    private function setOptions(array $options)
+    private function setOptions(array $options): void
     {
         $this->options = $this->getOptionsResolver()->resolve($options);
     }
 
-    protected function getOptionsResolver()
+    protected function getOptionsResolver(): OptionsResolver
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'ignore_errors' => true,
             'execute_only_first_png_optimizer' => true,
             'execute_only_first_jpeg_optimizer' => true,
-            'optipng_options' => array('-i0', '-o2', '-quiet'),
-            'pngquant_options' => array('--force', '--skip-if-larger'),
-            'pngcrush_options' => array('-reduce', '-q', '-ow'),
-            'pngout_options' => array('-s3', '-q', '-y'),
-            'gifsicle_options' => array('-b', '-O5'),
-            'jpegoptim_options' => array('--strip-all', '--all-progressive'),
-            'jpegtran_options' => array('-optimize', '-progressive'),
-            'advpng_options' => array('-z', '-4', '-q'),
-            'svgo_options' => array('--disable=cleanupIDs'),
-            'custom_optimizers' => array(),
+            'optipng_options' => ['-i0', '-o2', '-quiet'],
+            'pngquant_options' => ['--force', '--skip-if-larger'],
+            'pngcrush_options' => ['-reduce', '-q', '-ow'],
+            'pngout_options' => ['-s3', '-q', '-y'],
+            'gifsicle_options' => ['-b', '-O5'],
+            'jpegoptim_options' => ['--strip-all', '--all-progressive'],
+            'jpegtran_options' => ['-optimize', '-progressive'],
+            'advpng_options' => ['-z', '-4', '-q'],
+            'svgo_options' => ['--disable=cleanupIDs'],
+            'custom_optimizers' => [],
             'single_optimizer_timeout_in_seconds' => null
-        ));
+        ]);
 
-        $resolver->setDefined(array(
+        $resolver->setDefined([
             'optipng_bin',
             'pngquant_bin',
             'pngcrush_bin',
@@ -66,12 +66,12 @@ class OptimizerFactory
             'svgo_bin',
             'custom_optimizers',
             'single_optimizer_timeout_in_seconds'
-        ));
+        ]);
 
         return $resolver;
     }
 
-    protected function setUpOptimizers()
+    protected function setUpOptimizers(): void
     {
         $this->optimizers['optipng'] = $this->wrap(
             $this->commandOptimizer('optipng', $this->options['optipng_options'])
@@ -80,7 +80,7 @@ class OptimizerFactory
             $this->commandOptimizer('pngquant', $this->options['pngquant_options'],
                 function($filepath){
                     $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-                    return array('--ext='.($ext ? '.'.$ext : ''), '--');
+                    return ['--ext='.($ext ? '.'.$ext : ''), '--'];
                 }
             )
         );
@@ -93,12 +93,12 @@ class OptimizerFactory
         $this->optimizers['advpng'] = $this->wrap(
             $this->commandOptimizer('advpng', $this->options['advpng_options'])
         );
-        $this->optimizers['png'] = $this->wrap(new ChainOptimizer(array(
+        $this->optimizers['png'] = $this->wrap(new ChainOptimizer([
             $this->unwrap($this->optimizers['pngquant']),
             $this->unwrap($this->optimizers['optipng']),
             $this->unwrap($this->optimizers['pngcrush']),
             $this->unwrap($this->optimizers['advpng'])
-        ), $this->options['execute_only_first_png_optimizer'], $this->logger));
+        ], $this->options['execute_only_first_png_optimizer'], $this->logger));
 
         $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(
             $this->commandOptimizer('gifsicle', $this->options['gifsicle_options'])
@@ -110,38 +110,38 @@ class OptimizerFactory
         $this->optimizers['jpegtran'] = $this->wrap(
             $this->commandOptimizer('jpegtran', $this->options['jpegtran_options'],
                 function ($filepath) {
-                    return array('-outfile', $filepath);
+                    return ['-outfile', $filepath];
                 }
             )
         );
-        $this->optimizers['jpeg'] = $this->optimizers['jpg'] = $this->wrap(new ChainOptimizer(array(
+        $this->optimizers['jpeg'] = $this->optimizers['jpg'] = $this->wrap(new ChainOptimizer([
             $this->unwrap($this->optimizers['jpegtran']),
             $this->unwrap($this->optimizers['jpegoptim']),
-        ), $this->options['execute_only_first_jpeg_optimizer'], $this->logger));
+        ], $this->options['execute_only_first_jpeg_optimizer'], $this->logger));
 
         $this->optimizers['svg'] = $this->optimizers['svgo'] = $this->wrap(
             $this->commandOptimizer('svgo', $this->options['svgo_options'],
                 function ($filepath) {
-                    return array('--input' => $filepath, '--output' => $filepath);
+                    return ['--input' => $filepath, '--output' => $filepath];
                 }
             )
         );
 
         foreach($this->options['custom_optimizers'] as $key => $options) {
             $this->optimizers[$key] = $this->wrap(
-                $this->commandOptimizer($options['command'], isset($options['args']) ? $options['args'] : array())
+                $this->commandOptimizer($options['command'], isset($options['args']) ? $options['args'] : [])
             );
         }
 
-        $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer(array(
+        $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer([
             TypeGuesser::TYPE_GIF => $this->optimizers['gif'],
             TypeGuesser::TYPE_PNG => $this->optimizers['png'],
             TypeGuesser::TYPE_JPEG => $this->optimizers['jpeg'],
             TypeGuesser::TYPE_SVG => $this->optimizers['svg']
-        )));
+        ]));
     }
 
-    private function commandOptimizer($command, array $args, $extraArgs = null)
+    private function commandOptimizer(string $command, array $args, $extraArgs = null): CommandOptimizer
     {
         return new CommandOptimizer(
             new Command($this->executable($command), $args, $this->options['single_optimizer_timeout_in_seconds']),
@@ -149,17 +149,17 @@ class OptimizerFactory
         );
     }
 
-    private function wrap(Optimizer $optimizer)
+    private function wrap(Optimizer $optimizer): Optimizer
     {
         return $this->option('ignore_errors', true) ? new SuppressErrorOptimizer($optimizer, $this->logger) : $optimizer;
     }
 
-    private function unwrap(Optimizer $optimizer)
+    private function unwrap(Optimizer $optimizer): Optimizer
     {
         return $optimizer instanceof SuppressErrorOptimizer ? $optimizer->unwrap() : $optimizer;
     }
 
-    private function executable($name)
+    private function executable(string $name): string
     {
         $executableFinder = $this->executableFinder;
         return $this->option($name.'_bin', function() use($name, $executableFinder){
@@ -167,7 +167,7 @@ class OptimizerFactory
         });
     }
 
-    private function option($name, $default = null)
+    private function option(string $name, $default = null)
     {
         return isset($this->options[$name]) ? $this->options[$name] : $this->resolveDefault($default);
     }
@@ -177,7 +177,7 @@ class OptimizerFactory
      * @return Optimizer
      * @throws Exception When requested optimizer does not exist
      */
-    public function get($name = self::OPTIMIZER_SMART)
+    public function get(string $name = self::OPTIMIZER_SMART): Optimizer
     {
         if(!isset($this->optimizers[$name])) {
             throw new Exception(sprintf('Optimizer "%s" not found', $name));

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -14,19 +15,19 @@ class OptimizersTest extends TestCase
      * @test
      * @dataProvider optimizerProvider
      */
-    public function givenOptimizerAndSampleFile_runOptimization_fileShouldBeSmallerAndTheSame($optimizerName, $originalFile, $expectedSizeOfOriginalFile = 70)
+    public function givenOptimizerAndSampleFile_runOptimization_fileShouldBeSmallerAndTheSame(string $optimizerName, string $originalFile, float $expectedSizeOfOriginalFile = 70)
     {
         //given
 
-        $factory = new OptimizerFactory(array(
+        $factory = new OptimizerFactory([
             'ignore_errors' => $optimizerName === 'smart',
-            'custom_optimizers' => array(
-                'custom_optimizer' => array(
+            'custom_optimizers' => [
+                'custom_optimizer' => [
                     'command' => 'optipng',
-                    'args' => array('-i0', '-o2', '-quiet')
-                )
-            )
-        ));
+                    'args' => ['-i0', '-o2', '-quiet']
+                ]
+            ]
+        ]);
         $optimizer = $factory->get($optimizerName);
 
         $sampleFile = $this->prepareSampleFile($originalFile);
@@ -56,50 +57,22 @@ class OptimizersTest extends TestCase
         $jpgFile = __DIR__.'/Resources/sample.jpg';
         $svgFile = __DIR__.'/Resources/sample.svg';
 
-        return array(
-            array(
-                'optipng', $pngFile, 98.5
-            ),
-            array(
-                'pngquant', $pngFile,
-            ),
-            array(
-                'advpng', $pngFile, 101
-            ),
-            array(
-                'pngquant', $pngWithoutExtension,
-            ),
-            array(
-                'png', $pngFile,
-            ),
-            array(
-                'pngcrush', $pngFile, 98.5,
-            ),
-            array(
-                'pngout', $pngFile, 98.5,
-            ),
-            array(
-                'gifsicle', $gifFile, 105,
-            ),
-            array(
-                'jpegoptim', $jpgFile, 95,
-            ),
-            array(
-                'jpegtran', $jpgFile, 95,
-            ),
-            array(
-                'jpg', $jpgFile, 95,
-            ),
-            array(
-                'svg', $svgFile, 90,
-            ),
-            array(
-                'smart', $pngFile,
-            ),
-            array(
-                'custom_optimizer', $pngFile, 98.5
-            ),
-        );
+        return [
+            ['optipng', $pngFile, 98.5],
+            ['pngquant', $pngFile,],
+            ['advpng', $pngFile, 101],
+            ['pngquant', $pngWithoutExtension,],
+            ['png', $pngFile,],
+            ['pngcrush', $pngFile, 98.5,],
+            ['pngout', $pngFile, 98.5,],
+            ['gifsicle', $gifFile, 105,],
+            ['jpegoptim', $jpgFile, 95,],
+            ['jpegtran', $jpgFile, 95,],
+            ['jpg', $jpgFile, 95,],
+            ['svg', $svgFile, 90,],
+            ['smart', $pngFile,],
+            ['custom_optimizer', $pngFile, 98.5],
+        ];
     }
 
     /**
@@ -108,9 +81,7 @@ class OptimizersTest extends TestCase
      */
     public function givenUnsupportedFileForOptimizer_givenIgnoreErrorDisabled_throwEx()
     {
-        $factory = new OptimizerFactory(array(
-            'ignore_errors' => false,
-        ));
+        $factory = new OptimizerFactory(['ignore_errors' => false]);
 
         $optimizer = $factory->get('png');
 
@@ -122,9 +93,7 @@ class OptimizersTest extends TestCase
      */
     public function givenUnsupportedFileForOptimizer_givenIgnoreErrorEnabled_ok()
     {
-        $factory = new OptimizerFactory(array(
-            'ignore_errors' => true,
-        ));
+        $factory = new OptimizerFactory(['ignore_errors' => true]);
 
         $optimizer = $factory->get('png');
 
@@ -133,12 +102,12 @@ class OptimizersTest extends TestCase
 
     protected function tearDown()
     {
-        foreach(array('sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg') as $file) {
+        foreach(['sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg'] as $file) {
             @unlink(__DIR__.'/Resources/'.self::TMP_DIR.'/'.$file);
         }
     }
 
-    private function prepareSampleFile($originalFile)
+    private function prepareSampleFile(string $originalFile)
     {
         $destination = __DIR__.'/Resources/'.self::TMP_DIR.'/'.basename($originalFile);
         if(!@copy($originalFile, $destination)) {

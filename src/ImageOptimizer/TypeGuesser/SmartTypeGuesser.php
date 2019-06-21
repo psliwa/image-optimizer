@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
 
@@ -21,7 +21,7 @@ class SmartTypeGuesser implements TypeGuesser
         $this->typeGuessers[] = new ExtensionTypeGuesser();
     }
 
-    public function guess($filepath)
+    public function guess(string $filepath): string
     {
         foreach($this->typeGuessers as $typeGuesser) {
             $type = $typeGuesser->guess($filepath);

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -12,15 +12,11 @@ use Symfony\Component\Process\Process;
 final class Command
 {
     private $cmd;
-    private $args = array();
+    private $args;
     private $timeout;
 
-    public function __construct($bin, array $args = array(), $timeout = null)
+    public function __construct(string $bin, array $args = [], ?float $timeout = null)
     {
-        $this->cmd = $bin;
-        $this->args = $args;
-        $this->timeout = $timeout;
-
         if(!function_exists('exec')) {
             throw new Exception('"exec" function is not available. Please check if it is not listed as "disable_functions" in your "php.ini" file.');
         }
@@ -28,11 +24,15 @@ final class Command
         if(!function_exists('proc_open')) {
             throw new RuntimeException('"proc_open" function is not available. Please check if it is not listed as "disable_functions" in your "php.ini" file.');
         }
+
+        $this->cmd = $bin;
+        $this->args = $args;
+        $this->timeout = $timeout;
     }
 
-    public function execute(array $customArgs = array())
+    public function execute(array $customArgs = []): void
     {
-        $process = new Process(array_merge(array($this->cmd), $this->args, $customArgs));
+        $process = new Process(array_merge([$this->cmd], $this->args, $customArgs));
         $process->setTimeout($this->timeout);
 
         try {

@@ -1,12 +1,12 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
 
 
 class GdTypeGuesserTest extends AbstractTypeGuesserTest
 {
-    protected function createTypeGuesser()
+    protected function createTypeGuesser(): TypeGuesser
     {
         try {
             return new GdTypeGuesser();

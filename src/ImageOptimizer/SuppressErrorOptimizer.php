@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -18,7 +18,7 @@ class SuppressErrorOptimizer implements Optimizer
         $this->logger = $logger;
     }
 
-    public function optimize($filepath)
+    public function optimize(string $filepath): void
     {
         try {
             $this->optimizer->optimize($filepath);
@@ -27,7 +27,7 @@ class SuppressErrorOptimizer implements Optimizer
         }
     }
 
-    public function unwrap()
+    public function unwrap(): Optimizer
     {
         return $this->optimizer;
     }

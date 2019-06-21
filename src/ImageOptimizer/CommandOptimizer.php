@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace ImageOptimizer;
 
@@ -15,9 +15,9 @@ class CommandOptimizer implements Optimizer
         $this->extraArgs = $extraArgs;
     }
 
-    public function optimize($filepath)
+    public function optimize(string $filepath): void
     {
-        $customArgs = array($filepath);
+        $customArgs = [$filepath];
 
         if($this->extraArgs) {
             $customArgs = array_merge(
