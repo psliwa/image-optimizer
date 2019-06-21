@@ -16,6 +16,10 @@ final class Command
     {
         $this->cmd = $bin;
         $this->args = $args;
+
+        if(!function_exists('exec')) {
+            throw new Exception('"exec" function is not available. Please check if it is not listed as "disable_functions" in your "php.ini" file.');
+        }
     }
 
     public function execute(array $customArgs = array())
