@@ -50,7 +50,8 @@ class OptimizerFactory
             'jpegtran_options' => array('-optimize', '-progressive'),
             'advpng_options' => array('-z', '-4', '-q'),
             'svgo_options' => array('--disable=cleanupIDs'),
-            'custom_optimizers' => array()
+            'custom_optimizers' => array(),
+            'single_optimizer_timeout_in_seconds' => null
         ));
 
         $method = is_callable(array($resolver, 'setDefined')) ? 'setDefined' : 'setOptional';
@@ -65,7 +66,8 @@ class OptimizerFactory
             'jpegtran_bin',
             'advpng_bin',
             'svgo_bin',
-            'custom_optimizers'
+            'custom_optimizers',
+            'single_optimizer_timeout_in_seconds'
         ));
 
         return $resolver;
@@ -73,25 +75,26 @@ class OptimizerFactory
 
     protected function setUpOptimizers()
     {
-        $this->optimizers['optipng'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('optipng'), $this->options['optipng_options'])
-        ));
-        $this->optimizers['pngquant'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('pngquant'), $this->options['pngquant_options']),
-            function($filepath){
-                $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-                return array('--ext='.($ext ? '.'.$ext : ''), '--');
-            }
-        ));
-        $this->optimizers['pngcrush'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('pngcrush'), $this->options['pngcrush_options'])
-        ));
-        $this->optimizers['pngout'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('pngout'), $this->options['pngout_options'])
-        ));
-        $this->optimizers['advpng'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('advpng'), $this->options['advpng_options'])
-        ));
+        $this->optimizers['optipng'] = $this->wrap(
+            $this->commandOptimizer('optipng', $this->options['optipng_options'])
+        );
+        $this->optimizers['pngquant'] = $this->wrap(
+            $this->commandOptimizer('pngquant', $this->options['pngquant_options'],
+                function($filepath){
+                    $ext = pathinfo($filepath, PATHINFO_EXTENSION);
+                    return array('--ext='.($ext ? '.'.$ext : ''), '--');
+                }
+            )
+        );
+        $this->optimizers['pngcrush'] = $this->wrap(
+            $this->commandOptimizer('pngcrush', $this->options['pngcrush_options'])
+        );
+        $this->optimizers['pngout'] = $this->wrap(
+            $this->commandOptimizer('pngout', $this->options['pngout_options'])
+        );
+        $this->optimizers['advpng'] = $this->wrap(
+            $this->commandOptimizer('advpng', $this->options['advpng_options'])
+        );
         $this->optimizers['png'] = $this->wrap(new ChainOptimizer(array(
             $this->unwrap($this->optimizers['pngquant']),
             $this->unwrap($this->optimizers['optipng']),
@@ -99,35 +102,37 @@ class OptimizerFactory
             $this->unwrap($this->optimizers['advpng'])
         ), $this->options['execute_only_first_png_optimizer'], $this->logger));
 
-        $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('gifsicle'), $this->options['gifsicle_options'])
-        ));
+        $this->optimizers['gif'] = $this->optimizers['gifsicle'] = $this->wrap(
+            $this->commandOptimizer('gifsicle', $this->options['gifsicle_options'])
+        );
 
-        $this->optimizers['jpegoptim'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('jpegoptim'), $this->options['jpegoptim_options'])
-        ));
-        $this->optimizers['jpegtran'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('jpegtran'), $this->options['jpegtran_options']),
-            function ($filepath) {
-                return array('-outfile', $filepath);
-            }
-        ));
+        $this->optimizers['jpegoptim'] = $this->wrap(
+            $this->commandOptimizer('jpegoptim', $this->options['jpegoptim_options'])
+        );
+        $this->optimizers['jpegtran'] = $this->wrap(
+            $this->commandOptimizer('jpegtran', $this->options['jpegtran_options'],
+                function ($filepath) {
+                    return array('-outfile', $filepath);
+                }
+            )
+        );
         $this->optimizers['jpeg'] = $this->optimizers['jpg'] = $this->wrap(new ChainOptimizer(array(
             $this->unwrap($this->optimizers['jpegtran']),
             $this->unwrap($this->optimizers['jpegoptim']),
         ), $this->options['execute_only_first_jpeg_optimizer'], $this->logger));
 
-        $this->optimizers['svg'] = $this->optimizers['svgo'] = $this->wrap(new CommandOptimizer(
-            new Command($this->executable('svgo'), $this->options['svgo_options']),
-            function ($filepath) {
-                return array('--input' => $filepath, '--output' => $filepath);
-            }
-        ));
+        $this->optimizers['svg'] = $this->optimizers['svgo'] = $this->wrap(
+            $this->commandOptimizer('svgo', $this->options['svgo_options'],
+                function ($filepath) {
+                    return array('--input' => $filepath, '--output' => $filepath);
+                }
+            )
+        );
 
         foreach($this->options['custom_optimizers'] as $key => $options) {
-            $this->optimizers[$key] = $this->wrap(new CommandOptimizer(
-                new Command($this->executable($options['command'], isset($options['args']) ? $options['args'] : array()))
-            ));
+            $this->optimizers[$key] = $this->wrap(
+                $this->commandOptimizer($options['command'], isset($options['args']) ? $options['args'] : array())
+            );
         }
 
         $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer(array(
@@ -136,6 +141,14 @@ class OptimizerFactory
             TypeGuesser::TYPE_JPEG => $this->optimizers['jpeg'],
             TypeGuesser::TYPE_SVG => $this->optimizers['svg']
         )));
+    }
+
+    private function commandOptimizer($command, array $args, $extraArgs = null)
+    {
+        return new CommandOptimizer(
+            new Command($this->executable($command), $args, $this->options['single_optimizer_timeout_in_seconds']),
+            $extraArgs
+        );
     }
 
     private function wrap(Optimizer $optimizer)

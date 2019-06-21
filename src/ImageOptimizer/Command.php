@@ -3,55 +3,56 @@
 
 namespace ImageOptimizer;
 
-
+use function function_exists;
 use ImageOptimizer\Exception\CommandNotFound;
 use ImageOptimizer\Exception\Exception;
+use Symfony\Component\Process\Exception\RuntimeException;
+use Symfony\Component\Process\Process;
 
 final class Command
 {
     private $cmd;
     private $args = array();
+    private $timeout;
 
-    public function __construct($bin, array $args = array())
+    public function __construct($bin, array $args = array(), $timeout = null)
     {
         $this->cmd = $bin;
         $this->args = $args;
+        $this->timeout = $timeout;
 
         if(!function_exists('exec')) {
             throw new Exception('"exec" function is not available. Please check if it is not listed as "disable_functions" in your "php.ini" file.');
+        }
+
+        if(!function_exists('proc_open')) {
+            throw new RuntimeException('"proc_open" function is not available. Please check if it is not listed as "disable_functions" in your "php.ini" file.');
         }
     }
 
     public function execute(array $customArgs = array())
     {
-        $args = array_merge($this->args, $customArgs);
+        $process = new Process(array_merge(array($this->cmd), $this->args, $customArgs));
+        $process->setTimeout($this->timeout);
 
-        $isWindowsPlatform = defined('PHP_WINDOWS_VERSION_BUILD');
+        try {
+            $exitCode = $process->run();
+            $commandLine = $process->getCommandLine();
+            $output = $process->getOutput().PHP_EOL.$process->getErrorOutput();
 
-        if($isWindowsPlatform) {
-            $suppressOutput = '';
-            $escapeShellCmd = 'escapeshellarg';
-        } else {
-            $suppressOutput = ' 2>&1';
-            $escapeShellCmd = 'escapeshellcmd';
-        }
+            if($exitCode == 127) {
+                throw new CommandNotFound(sprintf('Command "%s" not found.', $this->cmd));
+            }
 
-        $commandArgs = 0 === count($args) ? '' : ' '.implode(' ', array_map('escapeshellarg', $args));
-        $command = $escapeShellCmd($this->cmd).$commandArgs.$suppressOutput;
+            if($exitCode !== 0) {
+                throw new Exception(sprintf('Command failed, return code: %d, command: %s.', $exitCode, $commandLine));
+            }
 
-        exec($command, $outputLines, $result);
-        $output = implode(PHP_EOL,$outputLines);
-
-        if($result == 127) {
-            throw new CommandNotFound(sprintf('Command "%s" not found.', $this->cmd));
-        }
-
-        if($result !== 0) {
-            throw new Exception(sprintf('Command failed, return code: %d, command: %s.', $result, $command));
-        }
-
-        if(stripos($output, 'error') !== false || stripos($output, 'permission') !== false) {
-            throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s.', $result, $command, $output));
+            if(stripos($output, 'error') !== false || stripos($output, 'permission') !== false) {
+                throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s.', $exitCode, $commandLine, trim($output)));
+            }
+        } catch(RuntimeException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
-} 
+}

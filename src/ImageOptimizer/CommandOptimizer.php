@@ -7,21 +7,21 @@ namespace ImageOptimizer;
 class CommandOptimizer implements Optimizer
 {
     private $command;
-    private $customArgs;
+    private $extraArgs;
 
     public function __construct(Command $command, $extraArgs = null)
     {
         $this->command = $command;
-        $this->customArgs = $extraArgs;
+        $this->extraArgs = $extraArgs;
     }
 
     public function optimize($filepath)
     {
         $customArgs = array($filepath);
 
-        if($this->customArgs) {
+        if($this->extraArgs) {
             $customArgs = array_merge(
-                is_callable($this->customArgs) ? call_user_func($this->customArgs, $filepath) : $this->customArgs,
+                is_callable($this->extraArgs) ? call_user_func($this->extraArgs, $filepath) : $this->extraArgs,
                 $customArgs
             );
         }
