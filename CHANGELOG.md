@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* 1.2.2 (???)
+* 1.2.2 (2019-06-21)
 
   * [#58] Easy way to add custom optimizers.
   * [#57] Clear error message when "exec" function is not available.
