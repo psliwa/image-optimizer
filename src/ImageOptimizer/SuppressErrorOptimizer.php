@@ -7,7 +7,7 @@ namespace ImageOptimizer;
 use ImageOptimizer\Exception\Exception;
 use Psr\Log\LoggerInterface;
 
-class SuppressErrorOptimizer implements Optimizer
+class SuppressErrorOptimizer implements WrapperOptimizer
 {
     private $optimizer;
     private $logger;
@@ -29,6 +29,6 @@ class SuppressErrorOptimizer implements Optimizer
 
     public function unwrap(): Optimizer
     {
-        return $this->optimizer;
+        return $this->optimizer instanceof WrapperOptimizer ? $this->optimizer->unwrap() : $this->optimizer;
     }
 }

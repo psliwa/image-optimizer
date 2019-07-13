@@ -100,9 +100,29 @@ class OptimizersTest extends TestCase
         $optimizer->optimize(__DIR__.'/Resources/sample.jpg');
     }
 
+    /**
+     * @test
+     */
+    public function givenOutputPath_optimizeOutputFile()
+    {
+        $factory = new OptimizerFactory(['output_filepath_pattern' => '%basename%/%filename%-optimized%ext%']);
+
+        $optimizer = $factory->get('jpg');
+
+        $sampleFile = $this->prepareSampleFile(__DIR__.'/Resources/sample.jpg');
+
+        $optimizer->optimize($sampleFile);
+
+        ImageAssertion::create($sampleFile, __DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg')
+            ->imagesHaveTheSameDimensions()
+            ->optimizedFileIsSmallerThanPercent(99)
+            ->imagesAreSimilarInPercent(98.7)
+        ;
+    }
+
     protected function tearDown()
     {
-        foreach(['sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg'] as $file) {
+        foreach(['sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg', 'sample-optimized.jpg'] as $file) {
             @unlink(__DIR__.'/Resources/'.self::TMP_DIR.'/'.$file);
         }
     }

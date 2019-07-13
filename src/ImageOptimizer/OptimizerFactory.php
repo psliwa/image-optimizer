@@ -51,7 +51,8 @@ class OptimizerFactory
             'advpng_options' => ['-z', '-4', '-q'],
             'svgo_options' => ['--disable=cleanupIDs'],
             'custom_optimizers' => [],
-            'single_optimizer_timeout_in_seconds' => 60
+            'single_optimizer_timeout_in_seconds' => 60,
+            'output_filepath_pattern' => '%basename%/%filename%%ext%'
         ]);
 
         $resolver->setDefined([
@@ -151,12 +152,13 @@ class OptimizerFactory
 
     private function wrap(Optimizer $optimizer): Optimizer
     {
+        $optimizer = $optimizer instanceof ChangedOutputOptimizer ? $optimizer : new ChangedOutputOptimizer($this->option('output_filepath_pattern'), $optimizer);
         return $this->option('ignore_errors', true) ? new SuppressErrorOptimizer($optimizer, $this->logger) : $optimizer;
     }
 
     private function unwrap(Optimizer $optimizer): Optimizer
     {
-        return $optimizer instanceof SuppressErrorOptimizer ? $optimizer->unwrap() : $optimizer;
+        return $optimizer instanceof WrapperOptimizer ? $optimizer->unwrap() : $optimizer;
     }
 
     private function executable(string $name): string

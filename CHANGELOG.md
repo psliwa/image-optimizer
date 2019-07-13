@@ -7,6 +7,8 @@ CHANGELOG
     symfony-process component as an implementation.
   * [#60] Skip larger files for pngquant optimizer
   * Adopt source code to more modern php versions (7.1+)
+  * [#61] New option - allow to change output filepath
+    (`output_filepath_pattern` option)
 
 * 1.2.2 (2019-06-21)
 

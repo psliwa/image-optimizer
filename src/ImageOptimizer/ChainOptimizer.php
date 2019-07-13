@@ -15,10 +15,10 @@ class ChainOptimizer implements Optimizer
     private $executeFirst;
     private $logger;
 
-    public function __construct(array $optimizers, $executeFirst, LoggerInterface $logger)
+    public function __construct(array $optimizers, bool $executeFirst, LoggerInterface $logger)
     {
         $this->optimizers = $optimizers;
-        $this->executeFirst = (boolean) $executeFirst;
+        $this->executeFirst = $executeFirst;
         $this->logger = $logger;
     }
 

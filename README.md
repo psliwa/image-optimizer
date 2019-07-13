@@ -42,6 +42,11 @@ Supported options:
   want to have control how long optimizing lasts. For example in some
   cases optimizing may not be worth when it takes big amount of time.
   Pass `null` in order to turn off timeout.
+* `output_filepath_pattern` (default: `%basename%/%filename%%ext%`) -
+  destination where optimized file will be stored. By default it
+  overrides original file. There are 3 placehoders: `%basename%`,
+  `%filename%` (without extension and dot) and `%ext%` (extension with
+  dot) which will be replaced by values from original file.
 * `execute_only_first_png_optimizer` (default: true) - execute the first
   successful or all `png` optimizers
 * `execute_only_first_jpeg_optimizer` (default: true) - execute the first successful or all `jpeg` optimizers
