@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* 2.0.0 (???)
+* 2.0.0 (2019-07-13)
 
   * [#21] Add configurable timeout for single optimizer. Use
     symfony-process component as an implementation.
