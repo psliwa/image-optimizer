@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* 2.0.1 (2019-09-24)
+
+  * [#70] Change log level from notice to error and change log message
+
 * 2.0.0 (2019-07-13)
 
   * [#21] Add configurable timeout for single optimizer. Use

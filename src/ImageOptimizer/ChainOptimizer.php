@@ -31,7 +31,7 @@ class ChainOptimizer implements Optimizer
 
                 if($this->executeFirst) break;
             } catch (Exception $e) {
-                $this->logger->notice($e);
+                $this->logger->error('Error during image optimization. See exception for more details.', [ 'exception' => $e ]);
                 $exceptions[] = $e;
             }
         }

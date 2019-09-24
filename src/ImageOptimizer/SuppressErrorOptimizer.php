@@ -23,7 +23,7 @@ class SuppressErrorOptimizer implements WrapperOptimizer
         try {
             $this->optimizer->optimize($filepath);
         } catch (Exception $e) {
-            $this->logger->notice($e);
+            $this->logger->error('Error during image optimization. See exception for more details.', [ 'exception' => $e ]);
         }
     }
 
