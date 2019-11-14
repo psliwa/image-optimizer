@@ -126,7 +126,7 @@ class OptimizerFactory
 
         foreach($this->options['custom_optimizers'] as $key => $options) {
             $this->optimizers[$key] = $this->wrap(new CommandOptimizer(
-                new Command($this->executable($options['command'], isset($options['args']) ? $options['args'] : array()))
+                new Command($this->executable($options['command']), isset($options['args']) ? $options['args'] : array())
             ));
         }
 
