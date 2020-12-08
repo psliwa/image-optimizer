@@ -13,7 +13,7 @@ abstract class AbstractTypeGuesserTest extends TestCase
      */
     protected $typeGuesser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->typeGuesser = $this->createTypeGuesser();
     }
