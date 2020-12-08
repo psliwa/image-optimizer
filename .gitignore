@@ -5,3 +5,4 @@ vendor/
 .idea
 .vagrant
 *.log
+.phpunit.result.cache

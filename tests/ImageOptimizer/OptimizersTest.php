@@ -120,7 +120,7 @@ class OptimizersTest extends TestCase
         ;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach(['sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg', 'sample-optimized.jpg'] as $file) {
             @unlink(__DIR__.'/Resources/'.self::TMP_DIR.'/'.$file);

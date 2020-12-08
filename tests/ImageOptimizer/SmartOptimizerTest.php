@@ -25,7 +25,7 @@ class SmartOptimizerTest extends TestCase
      */
     private $internalOptimizer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->internalOptimizer = $this->createMock('ImageOptimizer\\Optimizer');
 
