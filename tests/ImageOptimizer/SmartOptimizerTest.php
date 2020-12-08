@@ -57,10 +57,11 @@ class SmartOptimizerTest extends TestCase
 
     /**
      * @test
-     * @expectedException \ImageOptimizer\Exception\Exception
      */
     public function givenUnsupportedFilepath_throwException()
     {
+        $this->expectException(\ImageOptimizer\Exception\Exception::class);
+        
         //given
 
         $filepath = self::UNSUPPORTED_FILEPATH;

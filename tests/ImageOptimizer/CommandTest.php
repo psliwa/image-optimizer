@@ -12,48 +12,48 @@ class CommandTest extends TestCase
 {
     /**
      * Check if a CommandNotFound exception is thrown when the exit code is not 127.
-     *
-     * @expectedException \ImageOptimizer\Exception\CommandNotFound
-     * @expectedExceptionMessage Command "command-does-not-exist" not found.
      */
     public function testCommandNotFound()
     {
+        $this->expectException(\ImageOptimizer\Exception\CommandNotFound::class);
+        $this->expectExceptionMessage('Command "command-does-not-exist" not found.');
+
         $command = new Command('command-does-not-exist');
         $command->execute();
     }
 
     /**
      * Check if an exception is thrown when the exit code is not 0, but the command is found.
-     *
-     * @expectedException \Exception
-     * @expectedExceptionMessageRegExp /Command failed, return code: 2/
      */
     public function testCommandFailed()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageMatches('/Command failed, return code: 2/');
+
         $command = new Command('ls', ['/dir/does/not/exist']);
         $command->execute();
     }
 
     /**
      * Check if an exception is thrown when the output contains the word "error".
-     *
-     * @expectedException \Exception
-     * @expectedExceptionMessageRegExp /Command failed, return code: 0/
      */
     public function testCommandSucceededButErrorInOutput()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageMatches('/Command failed, return code: 0/');
+
         $command = new Command('echo', ['error']);
         $command->execute();
     }
 
     /**
      * Check if an exception is thrown when the command times out.
-     *
-     * @expectedException \Exception
-     * @expectedExceptionMessageRegExp /exceeded the timeout/
      */
     public function testCommandTimeout()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageMatches('/exceeded the timeout/');
+
         $command = new Command('sleep', ['2'], 0.1);
         $command->execute();
     }
