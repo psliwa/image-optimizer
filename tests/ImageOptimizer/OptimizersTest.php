@@ -77,10 +77,11 @@ class OptimizersTest extends TestCase
 
     /**
      * @test
-     * @expectedException \ImageOptimizer\Exception\Exception
      */
     public function givenUnsupportedFileForOptimizer_givenIgnoreErrorDisabled_throwEx()
     {
+        $this->expectException(\ImageOptimizer\Exception\Exception::class);
+
         $factory = new OptimizerFactory(['ignore_errors' => false]);
 
         $optimizer = $factory->get('png');
