@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+* 2.0.3 (2021-02-23)
+
+  * [#75] Support for PHP8
+
+* 2.0.2 (2020-01-11)
+
+  * [#73] Support for Symfony 5
+    
 * 2.0.1 (2019-09-24)
 
   * [#70] Change log level from notice to error and change log message
