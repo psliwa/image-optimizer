@@ -63,7 +63,7 @@ class OptimizersTest extends TestCase
             ['advpng', $pngFile, 101],
             ['pngquant', $pngWithoutExtension,],
             ['png', $pngFile,],
-            ['pngcrush', $pngFile, 98.5,],
+            ['pngcrush', $pngFile, 103,],
             ['pngout', $pngFile, 98.5,],
             ['gifsicle', $gifFile, 105,],
             ['jpegoptim', $jpgFile, 95,],

@@ -20,7 +20,7 @@ before_script:
   - sudo apt-get install gifsicle
   - sudo apt-get install optipng
   - sudo apt-get install libjpeg-progs
-  - npm install -g svgo
+  - npm install -g svgo@1.3.2
   - travis_retry composer self-update
   - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-source
 
