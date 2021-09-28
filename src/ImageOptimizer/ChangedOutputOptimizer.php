@@ -23,12 +23,22 @@ class ChangedOutputOptimizer implements WrapperOptimizer
             $this->outputPattern
         );
 
-        if($outputFilepath !== $filepath) {
+        $outputChanaged = $outputFilepath !== $filepath;
+
+        if ($outputChanaged) {
             copy($filepath, $outputFilepath);
             $filepath = $outputFilepath;
         }
 
-        $this->optimizer->optimize($filepath);
+        try {
+            $this->optimizer->optimize($filepath);
+        } catch (\Throwable $exception) {
+            if ($outputChanaged) {
+                unlink($filepath);
+            }
+
+            throw $exception;
+        }
     }
 
     public function unwrap(): Optimizer
