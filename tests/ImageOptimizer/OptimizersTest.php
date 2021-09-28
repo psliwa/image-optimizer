@@ -121,6 +121,38 @@ class OptimizersTest extends TestCase
         ;
     }
 
+    /**
+     * @test
+     */
+    public function optimizerFailed_optimizeChangedOutputFileWillBeDeleted()
+    {
+        $factory = new OptimizerFactory([
+            'output_filepath_pattern' => '%basename%/%filename%-optimized%ext%',
+            'optipng_bin' => '/dir/does/not/exist/bin',
+            'pngquant_bin' => '/dir/does/not/exist/bin',
+            'pngcrush_bin' => '/dir/does/not/exist/bin',
+            'pngout_bin' => '/dir/does/not/exist/bin',
+            'advpng_bin' => '/dir/does/not/exist/bin',
+            'gifsicle_bin' => '/dir/does/not/exist/bin',
+            'jpegoptim_bin' => '/dir/does/not/exist/bin',
+            'jpegtran_bin' => '/dir/does/not/exist/bin',
+            'svgo_bin' => '/dir/does/not/exist/bin',
+        ]);
+
+        $optimizer = $factory->get('jpg');
+
+        $sampleFile = $this->prepareSampleFile(__DIR__.'/Resources/sample.jpg');
+
+        $optimizer->optimize($sampleFile);
+
+        $this->assertFileNotExists(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
+
+        // smart optimizer will delete the file if it fails
+        $optimizer = $factory->get();
+        $optimizer->optimize($sampleFile);
+        $this->assertFileNotExists(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
+    }
+
     protected function tearDown(): void
     {
         foreach(['sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg', 'sample-optimized.jpg'] as $file) {
@@ -137,4 +169,4 @@ class OptimizersTest extends TestCase
 
         return $destination;
     }
-} 
+}

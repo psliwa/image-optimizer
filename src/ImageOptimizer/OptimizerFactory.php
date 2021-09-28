@@ -135,10 +135,10 @@ class OptimizerFactory
         }
 
         $this->optimizers[self::OPTIMIZER_SMART] = $this->wrap(new SmartOptimizer([
-            TypeGuesser::TYPE_GIF => $this->optimizers['gif'],
-            TypeGuesser::TYPE_PNG => $this->optimizers['png'],
-            TypeGuesser::TYPE_JPEG => $this->optimizers['jpeg'],
-            TypeGuesser::TYPE_SVG => $this->optimizers['svg']
+            TypeGuesser::TYPE_GIF => $this->unwrap($this->optimizers['gif']),
+            TypeGuesser::TYPE_PNG => $this->unwrap($this->optimizers['png']),
+            TypeGuesser::TYPE_JPEG => $this->unwrap($this->optimizers['jpeg']),
+            TypeGuesser::TYPE_SVG => $this->unwrap($this->optimizers['svg'])
         ]));
     }
 
