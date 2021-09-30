@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* 2.0.5 (2021-09-30)
+
+  * [#77] Fixed the bug that the copied files were not deleted when the optimization failed
+
 * 2.0.4 (2021-02-23)
 
   * [#75] Support for PHP8
