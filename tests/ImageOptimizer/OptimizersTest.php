@@ -145,12 +145,12 @@ class OptimizersTest extends TestCase
 
         $optimizer->optimize($sampleFile);
 
-        $this->assertFileNotExists(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
+        $this->assertFileDoesNotExist(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
 
         // smart optimizer will delete the file if it fails
         $optimizer = $factory->get();
         $optimizer->optimize($sampleFile);
-        $this->assertFileNotExists(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
+        $this->assertFileDoesNotExist(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
     }
 
     protected function tearDown(): void
