@@ -23,9 +23,9 @@ class ChangedOutputOptimizer implements WrapperOptimizer
             $this->outputPattern
         );
 
-        $outputChanaged = $outputFilepath !== $filepath;
+        $outputChanged = $outputFilepath !== $filepath;
 
-        if ($outputChanaged) {
+        if ($outputChanged) {
             copy($filepath, $outputFilepath);
             $filepath = $outputFilepath;
         }
@@ -33,7 +33,7 @@ class ChangedOutputOptimizer implements WrapperOptimizer
         try {
             $this->optimizer->optimize($filepath);
         } catch (\Throwable $exception) {
-            if ($outputChanaged) {
+            if ($outputChanged) {
                 unlink($filepath);
             }
 
