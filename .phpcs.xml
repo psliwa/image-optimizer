@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ruleset name="PSR12 Coding Standards">
+    <description>A custom set of code standard rules</description>
+
+    <rule ref="PSR12"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <exclude-pattern>*\.(?!php$)</exclude-pattern>
+    <exclude-pattern>vendor/*</exclude-pattern>
+</ruleset>

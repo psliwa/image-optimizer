@@ -1,10 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
 
-use function imagecolorat;
-use function imagecolorsforindex;
 use ImageOptimizer\TypeGuesser\SmartTypeGuesser;
 use ImageOptimizer\TypeGuesser\TypeGuesser;
 use InvalidArgumentException;
@@ -24,7 +23,10 @@ class ImageSimilarityJudge
         $typeGuesser = new SmartTypeGuesser();
 
         // svg images are not supported, so judge the as identical
-        if($typeGuesser->guess($image1) === TypeGuesser::TYPE_SVG || $typeGuesser->guess($image2) === TypeGuesser::TYPE_SVG) {
+        if (
+            $typeGuesser->guess($image1) === TypeGuesser::TYPE_SVG ||
+            $typeGuesser->guess($image2) === TypeGuesser::TYPE_SVG
+        ) {
             return 1;
         }
 
@@ -35,8 +37,8 @@ class ImageSimilarityJudge
 
         $delta = 0;
 
-        for($x=0; $x<$width; $x++) {
-            for($y=0; $y<$height; $y++) {
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
                 //is faster about 30% than array_sum(array_map(...)) solution
                 $color1 = self::colorAt($resource1, $x, $y);
                 $color2 = self::colorAt($resource2, $x, $y);
@@ -46,7 +48,7 @@ class ImageSimilarityJudge
             }
         }
 
-        return 1 - ($width && $height ? $delta/(3*255*$width*$height) : 0);
+        return 1 - ($width && $height ? $delta / (3 * 255 * $width * $height) : 0);
     }
 
     private static function createResource(string $image)
@@ -54,9 +56,9 @@ class ImageSimilarityJudge
         $typeGuesser = new SmartTypeGuesser();
         $type = $typeGuesser->guess($image);
 
-        $function = 'imagecreatefrom'.$type;
+        $function = 'imagecreatefrom' . $type;
 
-        if(!function_exists($function)) {
+        if (!function_exists($function)) {
             throw new InvalidArgumentException(sprintf('Image "%s" is not supported', $type));
         }
 
@@ -68,4 +70,4 @@ class ImageSimilarityJudge
         $colorIndex = imagecolorat($image, $x, $y);
         return imagecolorsforindex($image, $colorIndex);
     }
-} 
+}

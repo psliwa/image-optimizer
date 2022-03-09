@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
@@ -25,18 +26,23 @@ class ChainOptimizer implements Optimizer
     public function optimize(string $filepath): void
     {
         $exceptions = [];
-        foreach($this->optimizers as $optimizer) {
+        foreach ($this->optimizers as $optimizer) {
             try {
                 $optimizer->optimize($filepath);
 
-                if($this->executeFirst) break;
+                if ($this->executeFirst) {
+                    break;
+                }
             } catch (Exception $e) {
-                $this->logger->error('Error during image optimization. See exception for more details.', [ 'exception' => $e ]);
+                $this->logger->error(
+                    'Error during image optimization. See exception for more details.',
+                    ['exception' => $e]
+                );
                 $exceptions[] = $e;
             }
         }
 
-        if(count($exceptions) === count($this->optimizers)) {
+        if (count($exceptions) === count($this->optimizers)) {
             throw new Exception(sprintf('All optimizers failed to optimize the file: %s', $filepath));
         }
     }

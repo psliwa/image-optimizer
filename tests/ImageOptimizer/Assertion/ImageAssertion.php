@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer\Assertion;
@@ -25,7 +26,7 @@ class ImageAssertion
     public function optimizedFileIsSmallerThanPercent(float $percent): ImageAssertion
     {
         $originalFilesize = filesize($this->originalImage);
-        $actualPercent = filesize($this->optimizedImage)/ $originalFilesize * 100;
+        $actualPercent = filesize($this->optimizedImage) / $originalFilesize * 100;
 
         Assert::assertLessThan($percent, $actualPercent, 'compression level is too small');
 
@@ -46,10 +47,10 @@ class ImageAssertion
     public function imagesAreSimilarInPercent(float $percent): ImageAssertion
     {
         $similarity = ImageSimilarityJudge::judge($this->originalImage, $this->optimizedImage);
-        $percent = $percent/100;
+        $percent = $percent / 100;
 
         Assert::assertGreaterThan($percent, $similarity);
 
         return $this;
     }
-} 
+}

@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
-
 
 use PHPUnit\Framework\TestCase;
 
@@ -30,9 +30,9 @@ abstract class AbstractTypeGuesserTest extends TestCase
     public function validImageFileProvider()
     {
         return [
-            [__DIR__.'/../Resources/sample.png', TypeGuesser::TYPE_PNG],
-            [__DIR__.'/../Resources/sample.jpg', TypeGuesser::TYPE_JPEG],
-            [__DIR__.'/../Resources/sample.gif', TypeGuesser::TYPE_GIF],
+            [__DIR__ . '/../Resources/sample.png', TypeGuesser::TYPE_PNG],
+            [__DIR__ . '/../Resources/sample.jpg', TypeGuesser::TYPE_JPEG],
+            [__DIR__ . '/../Resources/sample.gif', TypeGuesser::TYPE_GIF],
             [__FILE__, TypeGuesser::TYPE_UNKNOWN],
         ];
     }

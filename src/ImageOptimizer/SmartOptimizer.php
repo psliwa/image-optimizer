@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
@@ -25,7 +26,7 @@ class SmartOptimizer implements Optimizer
     {
         $type = $this->typeGuesser->guess($filepath);
 
-        if(!isset($this->optimizers[$type])) {
+        if (!isset($this->optimizers[$type])) {
             throw new Exception(sprintf('Optimizer for type "%s" not found.', $type));
         }
 

@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
-
 
 use ImageOptimizer\Exception\Exception;
 
@@ -14,4 +14,4 @@ interface Optimizer
      * @throws Exception
      */
     public function optimize(string $filepath): void;
-} 
+}

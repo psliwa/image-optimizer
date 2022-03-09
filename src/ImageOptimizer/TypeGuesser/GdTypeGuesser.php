@@ -1,14 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
-
 
 class GdTypeGuesser implements TypeGuesser
 {
     public function __construct()
     {
-        if(!function_exists('gd_info')) {
+        if (!function_exists('gd_info')) {
             throw new \RuntimeException(sprintf('%s class require gd extension to be enabled', __CLASS__));
         }
     }
@@ -17,7 +17,7 @@ class GdTypeGuesser implements TypeGuesser
     {
         list(,,$type) = getimagesize($filepath);
 
-        switch($type) {
+        switch ($type) {
             case \IMAGETYPE_PNG:
                 return self::TYPE_PNG;
             case \IMAGETYPE_GIF:

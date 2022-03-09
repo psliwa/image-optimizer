@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
-
 
 class SmartTypeGuesser implements TypeGuesser
 {
@@ -23,10 +23,10 @@ class SmartTypeGuesser implements TypeGuesser
 
     public function guess(string $filepath): string
     {
-        foreach($this->typeGuessers as $typeGuesser) {
+        foreach ($this->typeGuessers as $typeGuesser) {
             $type = $typeGuesser->guess($filepath);
 
-            if($type !== self::TYPE_UNKNOWN) {
+            if ($type !== self::TYPE_UNKNOWN) {
                 return $type;
             }
         }

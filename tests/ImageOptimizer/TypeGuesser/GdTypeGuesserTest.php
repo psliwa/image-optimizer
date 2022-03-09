@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
-
 
 class GdTypeGuesserTest extends AbstractTypeGuesserTest
 {
@@ -15,4 +15,3 @@ class GdTypeGuesserTest extends AbstractTypeGuesserTest
         }
     }
 }
- 
