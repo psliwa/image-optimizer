@@ -11,9 +11,9 @@ use Symfony\Component\Process\Process;
 
 final class Command
 {
-    private $cmd;
-    private $args;
-    private $timeout;
+    public $cmd;
+    public $args;
+    public $timeout;
 
     public function __construct(string $bin, array $args = [], ?float $timeout = null)
     {

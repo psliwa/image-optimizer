@@ -11,9 +11,9 @@ class ChainOptimizer implements Optimizer
     /**
      * @var Optimizer[]
      */
-    private $optimizers;
-    private $executeFirst;
-    private $logger;
+    public $optimizers;
+    public $executeFirst;
+    public $logger;
 
     public function __construct(array $optimizers, bool $executeFirst, LoggerInterface $logger)
     {
