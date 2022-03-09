@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
@@ -9,14 +10,17 @@ use PHPUnit\Framework\TestCase;
 
 class OptimizersTest extends TestCase
 {
-    const TMP_DIR = 'tmp';
+    public const TMP_DIR = 'tmp';
 
     /**
      * @test
      * @dataProvider optimizerProvider
      */
-    public function givenOptimizerAndSampleFile_runOptimization_fileShouldBeSmallerAndTheSame(string $optimizerName, string $originalFile, float $expectedSizeOfOriginalFile = 70)
-    {
+    public function givenOptimizerAndSampleFile_runOptimization_fileShouldBeSmallerAndTheSame(
+        string $optimizerName,
+        string $originalFile,
+        float $expectedSizeOfOriginalFile = 70
+    ) {
         //given
 
         $factory = new OptimizerFactory([
@@ -51,11 +55,11 @@ class OptimizersTest extends TestCase
 
     public function optimizerProvider()
     {
-        $pngFile = __DIR__.'/Resources/sample.png';
-        $pngWithoutExtension = __DIR__.'/Resources/samplepng';
-        $gifFile = __DIR__.'/Resources/sample.gif';
-        $jpgFile = __DIR__.'/Resources/sample.jpg';
-        $svgFile = __DIR__.'/Resources/sample.svg';
+        $pngFile = __DIR__ . '/Resources/sample.png';
+        $pngWithoutExtension = __DIR__ . '/Resources/samplepng';
+        $gifFile = __DIR__ . '/Resources/sample.gif';
+        $jpgFile = __DIR__ . '/Resources/sample.jpg';
+        $svgFile = __DIR__ . '/Resources/sample.svg';
 
         return [
             ['optipng', $pngFile, 98.5],
@@ -86,7 +90,7 @@ class OptimizersTest extends TestCase
 
         $optimizer = $factory->get('png');
 
-        $optimizer->optimize(__DIR__.'/Resources/sample.jpg');
+        $optimizer->optimize(__DIR__ . '/Resources/sample.jpg');
     }
 
     /**
@@ -98,7 +102,7 @@ class OptimizersTest extends TestCase
 
         $optimizer = $factory->get('png');
 
-        $optimizer->optimize(__DIR__.'/Resources/sample.jpg');
+        $optimizer->optimize(__DIR__ . '/Resources/sample.jpg');
     }
 
     /**
@@ -110,11 +114,11 @@ class OptimizersTest extends TestCase
 
         $optimizer = $factory->get('jpg');
 
-        $sampleFile = $this->prepareSampleFile(__DIR__.'/Resources/sample.jpg');
+        $sampleFile = $this->prepareSampleFile(__DIR__ . '/Resources/sample.jpg');
 
         $optimizer->optimize($sampleFile);
 
-        ImageAssertion::create($sampleFile, __DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg')
+        ImageAssertion::create($sampleFile, __DIR__ . '/Resources/' . self::TMP_DIR . '/sample-optimized.jpg')
             ->imagesHaveTheSameDimensions()
             ->optimizedFileIsSmallerThanPercent(99)
             ->imagesAreSimilarInPercent(98.7)
@@ -141,29 +145,31 @@ class OptimizersTest extends TestCase
 
         $optimizer = $factory->get('jpg');
 
-        $sampleFile = $this->prepareSampleFile(__DIR__.'/Resources/sample.jpg');
+        $sampleFile = $this->prepareSampleFile(__DIR__ . '/Resources/sample.jpg');
 
         $optimizer->optimize($sampleFile);
 
-        $this->assertFileDoesNotExist(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
+        $this->assertFileDoesNotExist(__DIR__ . '/Resources/' . self::TMP_DIR . '/sample-optimized.jpg');
 
         // smart optimizer will delete the file if it fails
         $optimizer = $factory->get();
         $optimizer->optimize($sampleFile);
-        $this->assertFileDoesNotExist(__DIR__.'/Resources/'.self::TMP_DIR.'/sample-optimized.jpg');
+        $this->assertFileDoesNotExist(__DIR__ . '/Resources/' . self::TMP_DIR . '/sample-optimized.jpg');
     }
 
     protected function tearDown(): void
     {
-        foreach(['sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg', 'sample-optimized.jpg'] as $file) {
-            @unlink(__DIR__.'/Resources/'.self::TMP_DIR.'/'.$file);
+        $files = ['sample.gif', 'sample.jpg', 'sample.png', 'samplepng', 'sample.svg', 'sample-optimized.jpg'];
+
+        foreach ($files as $file) {
+            @unlink(__DIR__ . '/Resources/' . self::TMP_DIR . '/' . $file);
         }
     }
 
     private function prepareSampleFile(string $originalFile)
     {
-        $destination = __DIR__.'/Resources/'.self::TMP_DIR.'/'.basename($originalFile);
-        if(!@copy($originalFile, $destination)) {
+        $destination = __DIR__ . '/Resources/' . self::TMP_DIR . '/' . basename($originalFile);
+        if (!@copy($originalFile, $destination)) {
             $this->fail(sprintf('Preparing sample file "%s" failed.', $originalFile));
         }
 

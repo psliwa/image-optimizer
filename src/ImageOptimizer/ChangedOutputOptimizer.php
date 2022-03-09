@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
@@ -19,7 +20,11 @@ class ChangedOutputOptimizer implements WrapperOptimizer
         $fileInfo = pathinfo($filepath);
         $outputFilepath = str_replace(
             ['%basename%', '%filename%', '%ext%'],
-            [$fileInfo['dirname'], $fileInfo['filename'], isset($fileInfo['extension']) ? '.'.$fileInfo['extension'] : ''],
+            [
+                $fileInfo['dirname'],
+                $fileInfo['filename'],
+                isset($fileInfo['extension']) ? '.' . $fileInfo['extension'] : ''
+            ],
             $this->outputPattern
         );
 

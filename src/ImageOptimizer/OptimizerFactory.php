@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
-
 
 use ImageOptimizer\Exception\Exception;
 use ImageOptimizer\TypeGuesser\TypeGuesser;
@@ -13,7 +13,7 @@ use Symfony\Component\Process\ExecutableFinder;
 
 class OptimizerFactory
 {
-    const OPTIMIZER_SMART = 'smart';
+    public const OPTIMIZER_SMART = 'smart';
 
     private $optimizers = [];
     private $options;
@@ -78,10 +78,12 @@ class OptimizerFactory
             $this->commandOptimizer('optipng', $this->options['optipng_options'])
         );
         $this->optimizers['pngquant'] = $this->wrap(
-            $this->commandOptimizer('pngquant', $this->options['pngquant_options'],
-                function($filepath){
+            $this->commandOptimizer(
+                'pngquant',
+                $this->options['pngquant_options'],
+                function ($filepath) {
                     $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-                    return ['--ext='.($ext ? '.'.$ext : ''), '--'];
+                    return ['--ext=' . ($ext ? '.' . $ext : ''), '--'];
                 }
             )
         );
@@ -109,7 +111,9 @@ class OptimizerFactory
             $this->commandOptimizer('jpegoptim', $this->options['jpegoptim_options'])
         );
         $this->optimizers['jpegtran'] = $this->wrap(
-            $this->commandOptimizer('jpegtran', $this->options['jpegtran_options'],
+            $this->commandOptimizer(
+                'jpegtran',
+                $this->options['jpegtran_options'],
                 function ($filepath) {
                     return ['-outfile', $filepath];
                 }
@@ -121,14 +125,16 @@ class OptimizerFactory
         ], $this->options['execute_only_first_jpeg_optimizer'], $this->logger));
 
         $this->optimizers['svg'] = $this->optimizers['svgo'] = $this->wrap(
-            $this->commandOptimizer('svgo', $this->options['svgo_options'],
+            $this->commandOptimizer(
+                'svgo',
+                $this->options['svgo_options'],
                 function ($filepath) {
                     return ['--input' => $filepath, '--output' => $filepath];
                 }
             )
         );
 
-        foreach($this->options['custom_optimizers'] as $key => $options) {
+        foreach ($this->options['custom_optimizers'] as $key => $options) {
             $this->optimizers[$key] = $this->wrap(
                 $this->commandOptimizer($options['command'], isset($options['args']) ? $options['args'] : [])
             );
@@ -152,8 +158,16 @@ class OptimizerFactory
 
     private function wrap(Optimizer $optimizer): Optimizer
     {
-        $optimizer = $optimizer instanceof ChangedOutputOptimizer ? $optimizer : new ChangedOutputOptimizer($this->option('output_filepath_pattern'), $optimizer);
-        return $this->option('ignore_errors', true) ? new SuppressErrorOptimizer($optimizer, $this->logger) : $optimizer;
+        $optimizer = $optimizer instanceof ChangedOutputOptimizer ?
+            $optimizer :
+            new ChangedOutputOptimizer(
+                $this->option('output_filepath_pattern'),
+                $optimizer
+            );
+
+        return $this->option('ignore_errors', true) ?
+            new SuppressErrorOptimizer($optimizer, $this->logger) :
+            $optimizer;
     }
 
     private function unwrap(Optimizer $optimizer): Optimizer
@@ -164,7 +178,7 @@ class OptimizerFactory
     private function executable(string $name): string
     {
         $executableFinder = $this->executableFinder;
-        return $this->option($name.'_bin', function() use($name, $executableFinder){
+        return $this->option($name . '_bin', function () use ($name, $executableFinder) {
             return $executableFinder->find($name, $name);
         });
     }
@@ -181,7 +195,7 @@ class OptimizerFactory
      */
     public function get(string $name = self::OPTIMIZER_SMART): Optimizer
     {
-        if(!isset($this->optimizers[$name])) {
+        if (!isset($this->optimizers[$name])) {
             throw new Exception(sprintf('Optimizer "%s" not found', $name));
         }
 

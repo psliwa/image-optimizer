@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
@@ -84,4 +85,4 @@ class CommandTest extends TestCase
 
         $this->assertSame(false, $exception);
     }
-} 
+}

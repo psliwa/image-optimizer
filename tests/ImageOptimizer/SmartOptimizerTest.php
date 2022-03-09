@@ -1,19 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
-
 
 use ImageOptimizer\TypeGuesser\TypeGuesser;
 use PHPUnit\Framework\TestCase;
 
 class SmartOptimizerTest extends TestCase
 {
-    const SUPPORTED_TYPE = 'png';
-    const UNSUPPORTED_TYPE = 'gif';
+    public const SUPPORTED_TYPE = 'png';
+    public const UNSUPPORTED_TYPE = 'gif';
 
-    const SUPPORTED_FILEPATH = 'somefilepath';
-    const UNSUPPORTED_FILEPATH = 'unsupportedFilepath';
+    public const SUPPORTED_FILEPATH = 'somefilepath';
+    public const UNSUPPORTED_FILEPATH = 'unsupportedFilepath';
 
     /**
      * @var SmartOptimizer
@@ -61,7 +61,7 @@ class SmartOptimizerTest extends TestCase
     public function givenUnsupportedFilepath_throwException()
     {
         $this->expectException(\ImageOptimizer\Exception\Exception::class);
-        
+
         //given
 
         $filepath = self::UNSUPPORTED_FILEPATH;

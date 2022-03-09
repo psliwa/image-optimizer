@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
-
 
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +14,7 @@ class ImageSimilarityJudgeTest extends TestCase
      */
     public function testJudge(string $image1, string $image2, float $expectedGreaterThan, float $expectedLessThan = 1.)
     {
-        $actual = ImageSimilarityJudge::judge(__DIR__.'/Resources/'.$image1, __DIR__.'/Resources/'.$image2);
+        $actual = ImageSimilarityJudge::judge(__DIR__ . '/Resources/' . $image1, __DIR__ . '/Resources/' . $image2);
 
         $this->assertGreaterThanOrEqual($expectedGreaterThan, $actual);
         $this->assertLessThanOrEqual($expectedLessThan, $actual);
@@ -30,4 +30,3 @@ class ImageSimilarityJudgeTest extends TestCase
         ];
     }
 }
- 

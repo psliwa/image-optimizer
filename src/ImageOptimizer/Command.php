@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer;
 
-use function function_exists;
 use ImageOptimizer\Exception\CommandNotFound;
 use ImageOptimizer\Exception\Exception;
 use Symfony\Component\Process\Exception\RuntimeException;
@@ -17,12 +17,18 @@ final class Command
 
     public function __construct(string $bin, array $args = [], ?float $timeout = null)
     {
-        if(!function_exists('exec')) {
-            throw new Exception('"exec" function is not available. Please check if it is not listed as "disable_functions" in your "php.ini" file.');
+        if (!function_exists('exec')) {
+            throw new Exception(
+                '"exec" function is not available. ' .
+                'Please check if it is not listed as "disable_functions" in your "php.ini" file.'
+            );
         }
 
-        if(!function_exists('proc_open')) {
-            throw new RuntimeException('"proc_open" function is not available. Please check if it is not listed as "disable_functions" in your "php.ini" file.');
+        if (!function_exists('proc_open')) {
+            throw new RuntimeException(
+                '"proc_open" function is not available. ' .
+                'Please check if it is not listed as "disable_functions" in your "php.ini" file.'
+            );
         }
 
         $this->cmd = $bin;
@@ -38,16 +44,23 @@ final class Command
         try {
             $exitCode = $process->run();
             $commandLine = $process->getCommandLine();
-            $output = $process->getOutput().PHP_EOL.$process->getErrorOutput();
+            $output = $process->getOutput() . PHP_EOL . $process->getErrorOutput();
 
-            if($exitCode == 127) {
+            if ($exitCode == 127) {
                 throw new CommandNotFound(sprintf('Command "%s" not found.', $this->cmd));
             }
 
-            if($exitCode !== 0 || stripos($output, 'error') !== false || stripos($output, 'permission') !== false) {
-                throw new Exception(sprintf('Command failed, return code: %d, command: %s, stderr: %s', $exitCode, $commandLine, trim($output)));
+            if ($exitCode !== 0 || stripos($output, 'error') !== false || stripos($output, 'permission') !== false) {
+                throw new Exception(
+                    sprintf(
+                        'Command failed, return code: %d, command: %s, stderr: %s',
+                        $exitCode,
+                        $commandLine,
+                        trim($output)
+                    )
+                );
             }
-        } catch(RuntimeException $e) {
+        } catch (RuntimeException $e) {
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         }
     }

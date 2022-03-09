@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImageOptimizer\TypeGuesser;
-
 
 class SmartTypeGuesserTest extends AbstractTypeGuesserTest
 {
@@ -15,11 +15,10 @@ class SmartTypeGuesserTest extends AbstractTypeGuesserTest
     {
         $images = parent::validImageFileProvider();
         $images[] =  [
-            __DIR__.'/../Resources/sample.svg',
+            __DIR__ . '/../Resources/sample.svg',
             TypeGuesser::TYPE_SVG,
         ];
 
         return $images;
     }
 }
- 
