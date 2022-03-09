@@ -6,8 +6,8 @@ namespace ImageOptimizer;
 
 class CommandOptimizer implements Optimizer
 {
-    private $command;
-    private $extraArgs;
+    public $command;
+    public $extraArgs;
 
     public function __construct(Command $command, $extraArgs = null)
     {

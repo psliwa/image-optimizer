@@ -142,6 +142,34 @@ class OptimizerFactory
         ]));
     }
 
+    public function checkOptimizers()
+    {
+        $apps = [];
+
+        // Get a complete list of apps we currently support
+        foreach ($this->optimizers as $optimizer) {
+            $unwrapped = $optimizer->unwrap();
+
+            if ($unwrapped instanceof ChainOptimizer) {
+                foreach ($unwrapped->optimizers as $commandOptimizer) {
+                    $apps[$commandOptimizer->command->cmd] = false;
+                }
+            } elseif ($unwrapped instanceof CommandOptimizer) {
+                $apps[$unwrapped->command->cmd] = false;
+            }
+        }
+
+        // Loop through our apps calling 'which' on them to see if they're installed
+        foreach (array_keys($apps) as $app) {
+            $process = new \Symfony\Component\Process\Process(['which', $app]);
+            $process->run();
+
+            $apps[$app] = $process->isSuccessful();
+        }
+
+        return $apps;
+    }
+
     private function commandOptimizer(string $command, array $args, $extraArgs = null): CommandOptimizer
     {
         return new CommandOptimizer(
