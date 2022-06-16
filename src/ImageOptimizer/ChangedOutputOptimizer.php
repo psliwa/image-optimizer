@@ -18,8 +18,8 @@ class ChangedOutputOptimizer implements WrapperOptimizer
     {
         $fileInfo = pathinfo($filepath);
         $outputFilepath = str_replace(
-            ['%basename%', '%filename%', '%ext%'],
-            [$fileInfo['dirname'], $fileInfo['filename'], isset($fileInfo['extension']) ? '.'.$fileInfo['extension'] : ''],
+            ['%basename%', '%filename%', '%ext%', '/'],
+            [$fileInfo['dirname'], $fileInfo['filename'], isset($fileInfo['extension']) ? '.'.$fileInfo['extension'] : '', '\\'],
             $this->outputPattern
         );
 
